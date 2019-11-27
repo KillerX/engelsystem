@@ -117,7 +117,7 @@ function make_navigation()
         'admin_shifts'       => __('Create shifts'),
         'admin_rooms'        => __('Rooms'),
         'admin_groups'       => __('Grouprights'),
-        'admin_import'       => __('Frab import'),
+        'admin/schedule'     => ['schedule.import', 'schedule.import'],
         'admin_log'          => __('Log'),
         'admin_event_config' => __('Event config'),
     ];
@@ -126,12 +126,20 @@ function make_navigation()
         unset($admin_pages['admin_arrive']);
     }
 
-    foreach ($admin_pages as $menu_page => $title) {
-        if (auth()->can($menu_page)) {
+    foreach ($admin_pages as $menu_page => $options) {
+        $options = (array)$options;
+        $permissions = $menu_page;
+        $title = $options[0];
+
+        if (isset($options[1])) {
+            $permissions = $options[1];
+        }
+
+        if (auth()->can($permissions)) {
             $admin_menu[] = toolbar_item_link(
                 page_link_to($menu_page),
                 '',
-                $title,
+                __($title),
                 $menu_page == $page
             );
         }
