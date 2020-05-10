@@ -4,34 +4,36 @@ namespace Engelsystem\Controllers;
 
 use Engelsystem\Config\Config;
 use Engelsystem\Helpers\Authenticator;
-use Engelsystem\Http\Exceptions\HttpTemporaryRedirect;
+use Engelsystem\Http\Redirector;
+use Engelsystem\Http\Response;
 
 class HomeController extends BaseController
 {
-    /**
-     * @var Authenticator
-     */
+    /** @var Authenticator */
     protected $auth;
 
-    /**
-     * @var Config
-     */
+    /** @var Config */
     protected $config;
+
+    /** @var Redirector */
+    protected $redirect;
 
     /**
      * @param Authenticator $auth
      * @param Config        $config
+     * @param Redirector    $redirect
      */
-    public function __construct(Authenticator $auth, Config $config)
+    public function __construct(Authenticator $auth, Config $config, Redirector $redirect)
     {
         $this->auth = $auth;
         $this->config = $config;
+        $this->redirect = $redirect;
     }
 
     /**
-     * @throws HttpTemporaryRedirect
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         $config = new Config(['home_site' => '/user-shifts']);
 
