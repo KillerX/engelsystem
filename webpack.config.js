@@ -9,7 +9,7 @@ const fs = require('fs');
 // eslint-disable-next-line
 const __DEV__ = nodeEnv !== 'production';
 
-const devtool = __DEV__ ? 'eval-cheap-module-source-map' : undefined;
+const devtool = __DEV__ ? 'source-map' : '';
 
 const plugins = [
   new webpack.DefinePlugin({
@@ -57,7 +57,6 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules)/,
         loader: 'babel-loader',
-        options: { cacheDirectory: true },
       },
       { test: /\.(jpg|eot|ttf|otf|svg|woff2?)(\?.*)?$/, loader: 'file-loader' },
       { test: /\.json$/, loader: 'json-loader' },
