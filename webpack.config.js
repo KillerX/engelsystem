@@ -9,7 +9,7 @@ const fs = require('fs');
 // eslint-disable-next-line
 const __DEV__ = nodeEnv !== 'production';
 
-const devtool = __DEV__ ? 'source-map' : '';
+const devtool = __DEV__ ? 'source-map' : undefined 
 
 const plugins = [
   new webpack.DefinePlugin({
@@ -69,13 +69,18 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               postcssOptions: {
-                plugins: [ [ 'autoprefixer' ] ],
+                plugins: [ [ 'autoprefixer', ], ],
               },
             },
           },
-          { loader: 'sass-loader' },
-        ],
-      },
+          { 
+              loader: 'sass-loader',
+              options: {
+                  sassOptions: {
+                      quietDeps: true
+                  }
+              }
+          },
     ],
   },
   plugins,
