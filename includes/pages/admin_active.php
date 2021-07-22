@@ -228,7 +228,7 @@ function admin_active()
                 $parameters['show_all_shifts'] = 1;
             }
             $actions[] = form(
-                [form_submit('submit', __('set active'), 'btn-xs', false)],
+                [form_submit('submit', __('set active'), 'btn-sm', false)],
                 page_link_to('admin_active', $parameters)
             );
         }
@@ -241,7 +241,7 @@ function admin_active()
                 $parametersRemove['show_all_shifts'] = 1;
             }
             $actions[] = form(
-                [form_submit('submit', __('remove active'), 'btn-xs', false)],
+                [form_submit('submit', __('remove active'), 'btn-sm', false)],
                 page_link_to('admin_active', $parametersRemove)
             );
         }
@@ -254,7 +254,7 @@ function admin_active()
                 $parametersShirt['show_all_shifts'] = 1;
             }
             $actions[] = form(
-                [form_submit('submit', __('got t-shirt'), 'btn-xs', false)],
+                [form_submit('submit', __('got t-shirt'), 'btn-sm', false)],
                 page_link_to('admin_active', $parametersShirt)
             );
         }
@@ -267,7 +267,7 @@ function admin_active()
                 $parameters['show_all_shifts'] = 1;
             }
             $actions[] = form(
-                [form_submit('submit', __('remove t-shirt'), 'btn-xs', false)],
+                [form_submit('submit', __('remove t-shirt'), 'btn-sm', false)],
                 page_link_to('admin_active', $parameters)
             );
         }
