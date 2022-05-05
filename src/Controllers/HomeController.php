@@ -37,6 +37,6 @@ class HomeController extends BaseController
     {
         $config = new Config(['home_site' => '/user-shifts']);
 
-        throw new HttpTemporaryRedirect($this->auth->user() ? $config->get('home_site') : 'login');
+        return $this->redirect->to($this->auth->user() ? $this->config->get('home_site') : 'login');
     }
 }
