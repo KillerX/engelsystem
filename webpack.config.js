@@ -94,7 +94,8 @@ module.exports = {
               }
           },
     ],
+    },],
   },
   plugins,
-  devtool,
+  devtool
 };

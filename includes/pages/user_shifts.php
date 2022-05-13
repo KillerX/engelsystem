@@ -107,7 +107,9 @@ function load_rooms()
     $rooms = Rooms();
     if ($rooms->isEmpty()) {
         error(__('The administration has not configured any rooms yet.'));
-        throw_redirect(page_link_to('/'));
+        if (config('home_site') != 'user_shifts') {
+            throw_redirect(page_link_to('/'));
+        }
     }
 
     return $rooms;
@@ -147,7 +149,9 @@ function load_types()
 
     if (!count(DB::select('SELECT `id`, `name` FROM `AngelTypes`'))) {
         error(__('The administration has not configured any angeltypes yet - or you are not subscribed to any angeltype.'));
-        throw_redirect(page_link_to('/'));
+        if (config('home_site') != 'user_shifts') {
+            throw_redirect(page_link_to('/'));
+        }
     }
     $types = DB::select('
             SELECT
@@ -199,12 +203,8 @@ function view_user_shifts()
     $types = load_types();
     $ownTypes = [];
 
-    foreach (UserAngelTypes_by_User($user->id, true) as $type) {
-        if (!$type['confirm_user_id'] && $type['restricted']) {
-            continue;
-        }
-
-        $ownTypes[] = (int)$type['angeltype_id'];
+    foreach (AngelTypes() as $type) {
+        $ownTypes[] = (int)$type['id'];
     }
 
     if (!$session->has('shifts-filter')) {
