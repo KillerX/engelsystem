@@ -299,8 +299,8 @@ return [
 
     // Available locales in /resources/lang/
     'locales'                 => [
-        'de_DE' => 'Deutsch',
         'en_US' => 'English',
+        'de_DE' => 'Deutsch',
     ],
 
     // The default locale to use

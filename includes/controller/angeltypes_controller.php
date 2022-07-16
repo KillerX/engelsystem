@@ -10,7 +10,7 @@ use Engelsystem\ShiftsFilterRenderer;
  */
 function angeltypes_title()
 {
-    return __('Angeltypes');
+    return __('Usertypes');
 }
 
 /**

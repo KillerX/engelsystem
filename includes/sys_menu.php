@@ -93,10 +93,10 @@ function make_navigation()
     $menu = [];
     $pages = [
         // 'news'           => __('News'),
-        'meetings'       => [__('Meetings'), 'user_meetings'],
+        // 'meetings'       => [__('Meetings'), 'user_meetings'],
         'user_shifts'    => __('Shifts'),
         'angeltypes'     => __('Usertypes'),
-        'questions'      => [__('Ask the Heaven'), 'question.add'],
+        // 'questions'      => [__('Ask the Heaven'), 'question.add'],
     ];
 
     foreach ($pages as $menu_page => $options) {

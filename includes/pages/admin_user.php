@@ -8,7 +8,7 @@ use Engelsystem\Models\User\User;
  */
 function admin_user_title()
 {
-    return __('All Angels');
+    return __('All Users');
 }
 
 /**

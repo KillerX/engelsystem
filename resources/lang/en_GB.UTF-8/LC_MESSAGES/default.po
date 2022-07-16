@@ -22,7 +22,7 @@ msgstr ""
 #: includes/pages/user_shifts.php:251 includes/sys_menu.php:89
 #: includes/view/AngelTypes_view.php:76 includes/view/AngelTypes_view.php:134
 #: includes/view/User_view.php:832
-msgid "Usertypes"
+msgid "Angeltypes"
 msgstr "Usertypes"
 
 #: includes/controller/angeltypes_controller.php:69
@@ -97,7 +97,7 @@ msgid "join"
 msgstr "join"
 
 #: includes/controller/angeltypes_controller.php:353
-msgid "Usertype doesn't exist . "
+msgid "Angeltype doesn't exist . "
 msgstr "Usertype doesn't exist . "
 
 #: includes/controller/event_config_controller.php:11 includes/sys_menu.php:114
@@ -153,7 +153,7 @@ msgid "%s has been subscribed to the shift."
 msgstr "%s has been subscribed to the shift."
 
 #: includes/controller/shift_entries_controller.php:149
-msgid "User is not in usertype."
+msgid "User is not in angeltype."
 msgstr "User is not in usertype."
 
 #: includes/controller/shift_entries_controller.php:166
@@ -333,7 +333,7 @@ msgstr "Shifttypes"
 
 #: includes/controller/user_angeltypes_controller.php:33
 msgid "Angel types which need approvals:"
-msgstr "Angel types which need approvals:"
+msgstr "User types which need approvals:"
 
 #: includes/controller/user_angeltypes_controller.php:47
 #: includes/controller/user_angeltypes_controller.php:53
@@ -342,7 +342,7 @@ msgstr "Angel types which need approvals:"
 #: includes/controller/user_angeltypes_controller.php:139
 #: includes/controller/user_angeltypes_controller.php:199
 #: includes/controller/user_angeltypes_controller.php:265
-msgid "Usertype doesn't exist."
+msgid "Angeltype doesn't exist."
 msgstr "Usertype doesn't exist."
 
 #: includes/controller/user_angeltypes_controller.php:58
@@ -379,7 +379,7 @@ msgstr "Confirm all users"
 #: includes/controller/user_angeltypes_controller.php:193
 #: includes/controller/user_angeltypes_controller.php:246
 #: includes/controller/user_angeltypes_controller.php:259
-msgid "User usertype doesn't exist."
+msgid "User angeltype doesn't exist."
 msgstr "User usertype doesn't exist."
 
 #: includes/controller/user_angeltypes_controller.php:144
@@ -400,7 +400,7 @@ msgstr "%s confirmed for usertype %s."
 
 #: includes/controller/user_angeltypes_controller.php:171
 #: includes/view/UserAngelTypes_view.php:89
-msgid "Confirm usertype for user"
+msgid "Confirm angeltype for user"
 msgstr "Confirm usertype for user"
 
 #: includes/controller/user_angeltypes_controller.php:210
@@ -414,7 +414,7 @@ msgstr "User %s removed from %s."
 
 #: includes/controller/user_angeltypes_controller.php:225
 #: includes/view/UserAngelTypes_view.php:113
-msgid "Remove usertype"
+msgid "Remove angeltype"
 msgstr "Remove usertype"
 
 #: includes/controller/user_angeltypes_controller.php:241
@@ -727,25 +727,25 @@ msgstr "apply"
 
 #: includes/pages/admin_active.php:112
 msgid "Angel has been marked as active."
-msgstr "Angel has been marked as active."
+msgstr "User has been marked as active."
 
 #: includes/pages/admin_active.php:114 includes/pages/admin_active.php:125
 #: includes/pages/admin_active.php:147 includes/pages/admin_arrive.php:44
 #: includes/pages/admin_arrive.php:62
 msgid "Angel not found."
-msgstr "Angel not found."
+msgstr "User not found."
 
 #: includes/pages/admin_active.php:123
 msgid "Angel has been marked as not active."
-msgstr "Angel has been marked as not active."
+msgstr "User has been marked as not active."
 
 #: includes/pages/admin_active.php:134
 msgid "Angel has got a t-shirt."
-msgstr "Angel has got a t-shirt."
+msgstr "User has got a t-shirt."
 
 #: includes/pages/admin_active.php:145
 msgid "Angel has got no t-shirt."
-msgstr "Angel has got no t-shirt."
+msgstr "User has got no t-shirt."
 
 #: includes/pages/admin_active.php:235
 msgid "set active"
@@ -839,11 +839,11 @@ msgstr "Arrived users"
 
 #: includes/pages/admin_arrive.php:41
 msgid "Reset done. Angel has not arrived."
-msgstr "Reset done. Angel has not arrived."
+msgstr "Reset done. User has not arrived."
 
 #: includes/pages/admin_arrive.php:59
 msgid "Angel has been marked as arrived."
-msgstr "Angel has been marked as arrived."
+msgstr "User has been marked as arrived."
 
 #: includes/pages/admin_arrive.php:101 includes/view/UserAngelTypes_view.php:29
 #: includes/view/UserAngelTypes_view.php:57
@@ -918,7 +918,7 @@ msgstr "Alle"
 #: includes/pages/admin_free.php:106 includes/view/ShiftEntry_view.php:91
 #: includes/view/ShiftTypes_view.php:61
 #: includes/view/UserAngelTypes_view.php:152
-msgid "Usertype"
+msgid "Angeltype"
 msgstr "Usertype"
 
 #: includes/pages/admin_free.php:112 includes/pages/guest_login.php:289
@@ -1326,7 +1326,7 @@ msgstr "The following users are needed"
 
 #: includes/pages/admin_user.php:11 includes/sys_menu.php:105
 msgid "All Angels"
-msgstr "All Angels"
+msgstr "All Users"
 
 #: includes/pages/admin_user.php:32
 msgid "This user does not exist."
@@ -1359,7 +1359,7 @@ msgid ""
 "angeltypes."
 msgstr ""
 "Please visit the usertypes page or the users profile to manage users "
-"angeltypes."
+"usertypes."
 
 #: includes/pages/admin_user.php:308
 msgid "Edit user"
@@ -1434,14 +1434,14 @@ msgstr "For dect numbers are only 40 digits allowed."
 
 #: includes/pages/guest_login.php:252
 msgid "Angel registration successful!"
-msgstr "Angel registration successful!"
+msgstr "User registration successful!"
 
 #: includes/pages/guest_login.php:281
 msgid ""
 "By completing this form you're registering as a Chaos-Angel. This script "
 "will create you an account in the user task scheduler."
 msgstr ""
-"By completing this form you're registering as a Chaos-Angel. This script "
+"By completing this form you're registering as a User. This script "
 "will create you an account in the user task scheduler."
 
 #: includes/pages/guest_login.php:297 includes/view/User_view.php:62
@@ -2051,15 +2051,15 @@ msgstr "Event end date"
 
 #: includes/view/PublicDashboard_view.php:37
 msgid "Angels needed in the next 3 hrs"
-msgstr "Angels needed in the next 3 hrs"
+msgstr "Users needed in the next 3 hrs"
 
 #: includes/view/PublicDashboard_view.php:38
 msgid "Angels needed for nightshifts"
-msgstr "Angels needed for nightshifts"
+msgstr "Users needed for nightshifts"
 
 #: includes/view/PublicDashboard_view.php:39
 msgid "Angels currently working"
-msgstr "Angels currently working"
+msgstr "Users currently working"
 
 #: includes/view/PublicDashboard_view.php:40
 msgid "Hours to be worked"
@@ -2192,7 +2192,7 @@ msgstr "Edit shift entry"
 
 #: includes/view/ShiftEntry_view.php:193
 msgid "Angel:"
-msgstr "Angel:"
+msgstr "User:"
 
 #: includes/view/ShiftEntry_view.php:194
 msgid "Date, Duration:"
@@ -2419,7 +2419,7 @@ msgstr "Your password"
 #: includes/view/User_view.php:184
 #, php-format
 msgid "Angel should receive at least  %d vouchers."
-msgstr "Angel should receive at least  %d vouchers."
+msgstr "User should receive at least  %d vouchers."
 
 #: includes/view/User_view.php:189
 msgid "Number of vouchers given out"

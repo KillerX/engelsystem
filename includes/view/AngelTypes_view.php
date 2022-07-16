@@ -505,7 +505,7 @@ function AngelTypes_list_view($angeltypes, $admin_angeltypes)
         msg(),
         buttons([
             $admin_angeltypes
-                ? button(page_link_to('angeltypes', ['action' => 'edit']), __('New angeltype'), 'add')
+                ? button(page_link_to('angeltypes', ['action' => 'edit']), __('New usertype'), 'add')
                 : '',
             button(page_link_to('angeltypes', ['action' => 'about']), __('Teams/Job description'))
         ]),
