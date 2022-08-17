@@ -84,6 +84,8 @@ function User_settings_view(
                             $enable_dect ? form_text('dect', __('DECT'), $user_source->contact->dect, false, 40) : '',
                             form_text('mobile', __('Mobile'), $user_source->contact->mobile, false, 40),
                             form_text('mail', __('E-Mail') . ' ' . entry_required(), $user_source->email, false, 254),
+                            form_text('first', __('First Name') . ' ' . entry_required(), $user_source->personalData->first_name, false, 254),
+                            form_text('last', __('Last Name') . ' ' . entry_required(), $user_source->personalData->last_name, false, 254),
                             form_checkbox(
                                 'email_shiftinfo',
                                 __(
@@ -699,9 +701,9 @@ function User_view(
             ) : '',
             $its_me && count($shifts) == 0
                 ? error(sprintf(
-                __('Go to the <a href="%s">shifts table</a> to sign yourself up for some shifts.'),
-                page_link_to('user_shifts')
-            ), true)
+                    __('Go to the <a href="%s">shifts table</a> to sign yourself up for some shifts.'),
+                    page_link_to('user_shifts')
+                ), true)
                 : '',
             $its_me ? ical_hint() : ''
         ]

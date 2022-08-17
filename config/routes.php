@@ -56,6 +56,9 @@ $route->get('/api[/{resource:.+}]', 'ApiController@index');
 // Design
 $route->get('/design', 'DesignController@index');
 
+// Shifts
+$route->get('/export_shift/{id:\d+}', 'ShiftExportController@index');
+
 // Administration
 $route->addGroup(
     '/admin',

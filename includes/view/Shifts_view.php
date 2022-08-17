@@ -166,6 +166,7 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
             $shift_admin ? button(shift_delete_link($shift), icon('trash') . __('delete')) : '',
             $admin_shifttypes ? button(shifttype_link($shifttype), $shifttype['name']) : '',
             $admin_rooms ? button(room_link($room), icon('geo-alt') . $room->name) : '',
+            $shift_admin ? button("/export_shift/" . $shift["SID"], icon('file-earmark-excel') . "Export") : '',
         ];
     }
     $buttons[] = button(user_link(auth()->user()->id), '<span class="icon-icon_angel"></span> ' . __('My shifts'));

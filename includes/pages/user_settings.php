@@ -49,6 +49,14 @@ function user_settings_main($user_source, $enable_tshirt_size, $tshirt_sizes)
         $valid = false;
     }
 
+    if ($request->has('first')) {
+        $user_source->personalData->first_name = $request->input('first');
+    }
+
+    if ($request->has('last')) {
+        $user_source->personalData->last_name = $request->input('last');
+    }
+
     if ($request->has('planned_arrival_date') && $request->input('planned_arrival_date')) {
         $tmp = parse_date('Y-m-d H:i', $request->input('planned_arrival_date') . ' 00:00');
         $result = User_validate_planned_arrival_date($tmp);
