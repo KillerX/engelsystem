@@ -1,0 +1,43 @@
+{% extends 'layouts/app.twig' %}
+{% import 'macros/base.twig' as m %}
+{% import 'macros/form.twig' as f %}
+
+{% block title %}
+    {{ __('Jobs') }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>
+            {{ block('title') }}
+        </h1>
+
+        {% include 'layouts/parts/messages.twig' %}
+        {% for s in sch %}
+            <div class="row" style="padding: 10px;">
+                <div class="lane">
+                    <div class="card-body bg-dark border border-{{ s.border }}">
+                        <div class="card-header d-flex align-items-center">
+                            <a class="d-flex align-items-center text-white" href="http://localhost:5000/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('d.m.Y') }} - {{ s.title }}</h2></a>
+                        </div>
+                        {{ s.start|date('D H:i') }} - {{ s.end|date('H:i') }}</br>
+                        {% if s.description %}
+                            <span class="bi bi-info-circle"></span> {{ s.description }}<br>
+                        {% endif %}
+
+                        <a href=""> <span class="bi bi-geo-alt"></span> TODO: Location</a>
+
+                        {% for needed in s.neededAngels %}
+                            <div class="col-md-12" style="padding-bottom: 10px;">
+                                <strong>
+                                    <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1">{{ needed.remaining }} helper needed of total {{ needed.count }}</span>
+                                <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
+                                <br/>
+                            </div>
+                        {% endfor %}
+                    </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

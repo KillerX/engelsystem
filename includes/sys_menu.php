@@ -94,7 +94,7 @@ function make_navigation()
     $pages = [
         // 'news'           => __('News'),
         // 'meetings'       => [__('Meetings'), 'user_meetings'],
-        'user_shifts'    => __('Shifts'),
+        'shifts/list'    => [__('Shifts'), '*'],
         'angeltypes'     => __('Usertypes'),
         // 'questions'      => [__('Ask the Heaven'), 'question.add'],
     ];
@@ -108,7 +108,7 @@ function make_navigation()
         $menu[] = toolbar_item_link(page_link_to($menu_page), '', $title, $menu_page == $page);
     }
 
-    $menu = make_room_navigation($menu);
+    //$menu = make_room_navigation($menu);
 
     $admin_menu = [];
     $admin_pages = [
@@ -165,6 +165,10 @@ function menu_is_allowed(string $page, $options)
 
     if (isset($options[1])) {
         $permissions = $options[1];
+    }
+
+    if ($permissions == '*') {
+        return true;
     }
 
     return auth()->can($permissions);

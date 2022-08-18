@@ -4,10 +4,12 @@ namespace Engelsystem\Models\Shifts;
 
 use Carbon\Carbon;
 use Engelsystem\Models\BaseModel;
-use Engelsystem\Models\Shifts\ShiftEntry;
+use Engelsystem\Models\AngelType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
@@ -31,14 +33,14 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @method static QueryBuilder|Schedule[] whereCreatedAt($value)
  * @method static QueryBuilder|Schedule[] whereUpdatedAt($value)
  */
-class Shift extends BaseModel
+class NeededAngelTypes extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'Shifts';
+    protected $table = 'NeededAngelTypes';
 
 
     /**
@@ -46,15 +48,15 @@ class Shift extends BaseModel
      *
      * @var string
      */
-    protected $primaryKey = 'SID';
+    protected $primaryKey = 'id';
 
-    public function entries()
+    public function angelType(): HasOne
     {
-        return $this->hasMany(ShiftEntry::class, 'SID', 'SID');
+        return $this->hasOne(AngelType::class, 'id', 'angel_type_id');
     }
 
-    public function neededAngels()
+    public function parentShift(): BelongsTo
     {
-        return $this->hasMany(NeededAngelTypes::class, 'shift_id', 'SID');
+        return $this->belongsTo(Shift::class, 'shift_id', 'SID');
     }
 }

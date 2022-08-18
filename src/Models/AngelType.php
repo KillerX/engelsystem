@@ -1,13 +1,14 @@
 <?php
 
-namespace Engelsystem\Models\Shifts;
+namespace Engelsystem\Models;
 
 use Carbon\Carbon;
 use Engelsystem\Models\BaseModel;
-use Engelsystem\Models\Shifts\ShiftEntry;
+use Engelsystem\Models\User\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
@@ -31,14 +32,14 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @method static QueryBuilder|Schedule[] whereCreatedAt($value)
  * @method static QueryBuilder|Schedule[] whereUpdatedAt($value)
  */
-class Shift extends BaseModel
+class AngelType extends BaseModel
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'Shifts';
+    protected $table = 'AngelTypes';
 
 
     /**
@@ -46,15 +47,5 @@ class Shift extends BaseModel
      *
      * @var string
      */
-    protected $primaryKey = 'SID';
-
-    public function entries()
-    {
-        return $this->hasMany(ShiftEntry::class, 'SID', 'SID');
-    }
-
-    public function neededAngels()
-    {
-        return $this->hasMany(NeededAngelTypes::class, 'shift_id', 'SID');
-    }
+    protected $primaryKey = 'id';
 }

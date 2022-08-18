@@ -58,7 +58,7 @@ $route->get('/design', 'DesignController@index');
 
 // Shifts
 $route->get('/export_shift/{id:\d+}', 'ShiftExportController@index');
-
+$route->get('/shifts/list', 'ShiftListController@index');
 // Administration
 $route->addGroup(
     '/admin',

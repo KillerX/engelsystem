@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 /**
  * Render a stat for dashborad (big number with label).
@@ -149,10 +150,12 @@ function icon_bool($boolean)
  */
 function div($class, $content = [], $dom_id = '')
 {
-    if (is_array($content)) {
-        $content = join("\n", $content);
-    }
     $dom_id = $dom_id != '' ? ' id="' . $dom_id . '"' : '';
+
+    if (is_array($content)) {
+        $content = @implode("\n", Arr::flatten($content));
+    }
+
     return '<div' . $dom_id . ' class="' . $class . '">' . $content . '</div>';
 }
 
