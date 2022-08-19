@@ -429,7 +429,7 @@ function admin_shifts()
         form([
             div('row',[
                 div('col-md-6', [
-                    form_select('shifttype_id', __('Shifttype'), $shifttypes, $shifttype_id),
+                    form_select('shifttype_id', __('Job Type'), $shifttypes, $shifttype_id),
                     form_text('title', __('Title'), $title),
                     form_select('rid', __('Room'), $room_array, $rid),
                 ]),

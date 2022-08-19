@@ -18,14 +18,14 @@
                 <div class="lane">
                     <div class="card-body bg-dark border border-{{ s.border }}">
                         <div class="card-header d-flex align-items-center">
-                            <a class="d-flex align-items-center text-white" href="http://localhost:5000/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('d.m.Y') }} - {{ s.title }}</h2></a>
+                            <a class="d-flex align-items-center text-white" href="/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('d.m.Y') }} - {{ s.title }}</h2></a>
                         </div>
                         {{ s.start|date('D H:i') }} - {{ s.end|date('H:i') }}</br>
                         {% if s.description %}
                             <span class="bi bi-info-circle"></span> {{ s.description }}<br>
                         {% endif %}
 
-                        <a href=""> <span class="bi bi-geo-alt"></span> TODO: Location</a>
+                        <a href="/rooms?action=view&room_id={{s.RID}}"><span class="bi bi-geo-alt"></span> {{ s.room.name }}</a>
 
                         {% for needed in s.neededAngels %}
                             <div class="col-md-12" style="padding-bottom: 10px;">

@@ -226,14 +226,14 @@ class ShiftCalendarRenderer
                 return div('tick day');
             }
             return div('tick day', [
-                date(__('m-d'), $time) .'<br>'.date(__('H:i'), $time)
+                date(__('d.m'), $time) .'<br>'.date(__('H:i'), $time)
             ]);
         } elseif ($time % (60 * 60) == 0) {
             if (!$label) {
                 return div('tick hour');
             }
             return div('tick hour', [
-                date(__('m-d'), $time) .'<br>'.date(__('H:i'), $time)
+                date(__('d.m'), $time) .'<br>'.date(__('H:i'), $time)
             ]);
         }
         return div('tick');

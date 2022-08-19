@@ -7,7 +7,7 @@ use Engelsystem\Models\Room;
  */
 function admin_rooms_title()
 {
-    return __('Rooms');
+    return __('Locations');
 }
 
 /**

@@ -147,7 +147,7 @@ class ImportSchedule extends BaseController
         $schedule->save();
 
         $this->log->info(
-            'Schedule {name}: Url {url}, Shift Type {shift_type}, minutes before/after {before}/{after}',
+            'Schedule {name}: Url {url}, Job Type {shift_type}, minutes before/after {before}/{after}',
             [
                 'name'       => $schedule->name,
                 'url'        => $schedule->name,

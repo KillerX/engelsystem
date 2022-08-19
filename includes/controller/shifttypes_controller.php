@@ -30,7 +30,7 @@ function shifttype_delete_controller()
         ShiftType_delete($shifttype['id']);
 
         engelsystem_log('Deleted shifttype ' . $shifttype['name']);
-        success(sprintf(__('Shifttype %s deleted.'), $shifttype['name']));
+        success(sprintf(__('Job Type %s deleted.'), $shifttype['name']));
         throw_redirect(page_link_to('shifttypes'));
     }
 
@@ -58,7 +58,7 @@ function shifttype_edit_controller()
     if ($request->has('shifttype_id')) {
         $shifttype = ShiftType($request->input('shifttype_id'));
         if (empty($shifttype)) {
-            error(__('Shifttype not found.'));
+            error(__('Job Type not found.'));
             throw_redirect(page_link_to('shifttypes'));
         }
         $shifttype_id = $shifttype['id'];
@@ -156,7 +156,7 @@ function shifttypes_list_controller()
  */
 function shifttypes_title()
 {
-    return __('Shifttypes');
+    return __('Job Types');
 }
 
 /**

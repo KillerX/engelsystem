@@ -94,7 +94,7 @@ function make_navigation()
     $pages = [
         // 'news'           => __('News'),
         // 'meetings'       => [__('Meetings'), 'user_meetings'],
-        'shifts/list'    => [__('Shifts'), '*'],
+        'shifts/list'    => [__('Jobs'), '*'],
         'angeltypes'     => __('Usertypes'),
         // 'questions'      => [__('Ask the Heaven'), 'question.add'],
     ];
@@ -119,9 +119,9 @@ function make_navigation()
         'users'              => ['All Angels', 'admin_user'],
         'admin_free'         => __('Free Users'),
         'admin/questions'    => ['Answer questions', 'question.edit'],
-        'shifttypes'         => __('Shifttypes'),
+        'shifttypes'         => __('Job Types'),
         'admin_shifts'       => __('Create shifts'),
-        'admin_rooms'        => __('Rooms'),
+        'admin_rooms'        => __('Locations'),
         'admin_groups'       => __('Grouprights'),
         'admin/schedule'     => ['schedule.import', 'schedule.import'],
         'admin/logs'         => ['log.log', 'admin_log'],
@@ -199,7 +199,7 @@ function make_room_navigation($menu)
         $room_menu[] = toolbar_dropdown_item(room_link($room), $room->name, false, 'geo-alt');
     }
     if (count($room_menu) > 0) {
-        $menu[] = toolbar_dropdown('map-marker', __('Rooms'), $room_menu);
+        $menu[] = toolbar_dropdown('map-marker', __('Locations'), $room_menu);
     }
     return $menu;
 }

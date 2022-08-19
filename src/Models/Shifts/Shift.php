@@ -4,6 +4,7 @@ namespace Engelsystem\Models\Shifts;
 
 use Carbon\Carbon;
 use Engelsystem\Models\BaseModel;
+use Engelsystem\Models\Room;
 use Engelsystem\Models\Shifts\ShiftEntry;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,5 +57,10 @@ class Shift extends BaseModel
     public function neededAngels()
     {
         return $this->hasMany(NeededAngelTypes::class, 'shift_id', 'SID');
+    }
+
+    public function room()
+    {
+        return $this->hasOne(Room::class, 'id', 'RID');
     }
 }

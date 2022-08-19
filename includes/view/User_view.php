@@ -223,10 +223,10 @@ function Users_view(
         $u['got_shirt'] = icon_bool($user->state->got_shirt);
         $u['shirt_size'] = $user->personalData->shirt_size;
         $u['arrival_date'] = $user->personalData->planned_arrival_date
-            ? $user->personalData->planned_arrival_date->format(__('Y-m-d')) : '';
+            ? $user->personalData->planned_arrival_date->format(__('d.m.Y')) : '';
         $u['departure_date'] = $user->personalData->planned_departure_date
-            ? $user->personalData->planned_departure_date->format(__('Y-m-d')) : '';
-        $u['last_login_at'] = $user->last_login_at ? $user->last_login_at->format(__('m/d/Y h:i a')) : '';
+            ? $user->personalData->planned_departure_date->format(__('d.m.Y')) : '';
+        $u['last_login_at'] = $user->last_login_at ? $user->last_login_at->format(__('d.m.Y h:i a')) : '';
         $u['actions'] = table_buttons([
             button_icon(page_link_to('admin_user', ['id' => $user->id]), 'pencil-square', 'btn-sm')
         ]);
@@ -537,7 +537,7 @@ function User_view_worklog(Worklog $worklog, $admin_user_worklog_privilege)
     }
 
     return [
-        'date'       => icon('calendar3') . date('Y-m-d', $worklog->worked_at->timestamp),
+        'date'       => icon('calendar3') . date('d.m.Y', $worklog->worked_at->timestamp),
         'duration'   => sprintf('%.2f', $worklog->hours) . ' h',
         'room'       => '',
         'shift_info' => __('Work log entry'),
@@ -545,7 +545,7 @@ function User_view_worklog(Worklog $worklog, $admin_user_worklog_privilege)
             . sprintf(
                 __('Added by %s at %s'),
                 User_Nick_render($worklog->creator),
-                $worklog->created_at->format('Y-m-d H:i')
+                $worklog->created_at->format('d.m.Y H:i')
             ),
         'actions'    => $actions
     ];
@@ -744,12 +744,6 @@ function User_view_state_user($user_source)
         User_shift_state_render($user_source)
     ];
 
-    if ($user_source->state->arrived) {
-        $state[] = '<span class="text-success">' . icon('house') . __('Arrived') . '</span>';
-    } else {
-        $state[] = '<span class="text-danger">' . __('Not arrived') . '</span>';
-    }
-
     return $state;
 }
 
@@ -775,7 +769,7 @@ function User_view_state_admin($freeloader, $user_source)
         $state[] = '<span class="text-success">' . icon('house')
             . sprintf(
                 __('Arrived at %s'),
-                $user_source->state->arrival_date ? $user_source->state->arrival_date->format('Y-m-d') : ''
+                $user_source->state->arrival_date ? $user_source->state->arrival_date->format('d.m.Y') : ''
             )
             . '</span>';
 
@@ -792,7 +786,7 @@ function User_view_state_admin($freeloader, $user_source)
         $state[] = '<span class="text-danger">'
             . ($arrivalDate ? sprintf(
                 __('Not arrived (Planned: %s)'),
-                $arrivalDate->format('Y-m-d')
+                $arrivalDate->format('d.m.Y')
             ) : __('Not arrived'))
             . '</span>';
     }

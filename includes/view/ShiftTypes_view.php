@@ -134,7 +134,7 @@ function ShiftTypes_list_view($shifttypes)
     return page_with_title(shifttypes_title(), [
         msg(),
         buttons([
-            button(page_link_to('shifttypes', ['action' => 'edit']), __('New shifttype'), 'add')
+            button(page_link_to('shifttypes', ['action' => 'edit']), __('New job type'), 'add')
         ]),
         table([
             'name'    => __('Name'),
