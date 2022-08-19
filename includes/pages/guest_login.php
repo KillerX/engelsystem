@@ -70,7 +70,7 @@ function guest_register()
     }
     foreach ($angel_types_source as $angel_type) {
         $angel_types[$angel_type['id']] = $angel_type['name']
-            . ($angel_type['restricted'] ? ' (' . __('Requires introduction') . ')' : '');
+            . ($angel_type['restricted'] ? ' (' . __('Requires confirmation') . ')' : '');
         if (!$angel_type['restricted']) {
             $selected_angel_types[] = $angel_type['id'];
         }
@@ -411,7 +411,7 @@ function guest_register()
                     ),
                     form_checkbox(
                         'email_by_human_allowed',
-                        __('Allow heaven angels to contact you by e-mail.'),
+                        __('Allow admins to contact you by e-mail.'),
                         $email_by_human_allowed
                     ),
                     config('enable_goody') ?

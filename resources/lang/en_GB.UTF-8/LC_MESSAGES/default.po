@@ -1652,7 +1652,7 @@ msgstr "Create news:"
 #: includes/pages/user_questions.php:11 includes/sys_menu.php:90
 #: includes/view/Questions_view.php:40
 msgid "Ask the Heaven"
-msgstr "Ask the Heaven"
+msgstr "Ask the Admins"
 
 #: includes/pages/user_questions.php:55
 msgid "You question was saved."
@@ -2621,8 +2621,8 @@ msgstr ""
 #: includes/view/User_view.php:915
 #, php-format
 msgid ""
-"You freeloaded at least %s shifts. Shift signup is locked. Please go to "
-"heavens desk to be unlocked again."
+"You freeloaded at least %s shifts. Shift signup is locked. Please ask the admins"
+"to be unlocked again."
 msgstr ""
 "You freeloaded at least %s shifts. Shift signup is locked. Please go to "
 "heavens desk to be unlocked again."

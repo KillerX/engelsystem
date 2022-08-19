@@ -87,11 +87,11 @@ function AngelType_edit_view($angeltype, $supporter_mode)
                 ? form_info(__('Name'), $angeltype['name'])
                 : form_text('name', __('Name'), $angeltype['name']),
             $supporter_mode
-                ? form_info(__('Requires introduction'), $angeltype['restricted'] ? __('Yes') : __('No'))
-                : form_checkbox('restricted', __('Requires introduction'), $angeltype['restricted']),
+                ? form_info(__('Requires confirmation'), $angeltype['restricted'] ? __('Yes') : __('No'))
+                : form_checkbox('restricted', __('Requires confirmation'), $angeltype['restricted']),
             form_info(
                 '',
-                __('Angel types which require introduction can only be used by an angel if enabled by a supporter (double opt-in).')
+                __('Angel types which require confirmation can only be used by a user if confirmed by a supporter.')
             ),
             $supporter_mode
                 ? form_info(__('No Self Sign Up allowed'), $angeltype['no_self_signup'] ? __('Yes') : __('No'))
@@ -160,7 +160,7 @@ function AngelType_view_buttons($angeltype, $user_angeltype, $admin_angeltypes, 
 
         if ($angeltype['restricted'] && empty($user_angeltype['confirm_user_id'])) {
             error(sprintf(
-                __('You are unconfirmed for this angeltype. Please go to the introduction for %s to get confirmed.'),
+                __('You are unconfirmed for this angeltype. Please contact %s to get confirmed.'),
                 $angeltype['name']
             ));
         }
@@ -511,7 +511,7 @@ function AngelTypes_list_view($angeltypes, $admin_angeltypes)
         ]),
         table([
             'name'           => __('Name'),
-            'restricted'     => icon('book') . __('Requires introduction'),
+            'restricted'     => icon('book') . __('Requires confirmation'),
             'no_self_signup' => icon('pencil-square') . __('Self Sign Up Allowed'),
             'membership'     => __('Membership'),
             'actions'        => ''

@@ -169,7 +169,7 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
             $shift_admin ? button("/export_shift/" . $shift["SID"], icon('file-earmark-excel') . "Export") : '',
         ];
     }
-    $buttons[] = button(user_link(auth()->user()->id), '<span class="icon-icon_angel"></span> ' . __('My shifts'));
+    $buttons[] = button(user_link(auth()->user()->id), '<span class="bi bi-person-circle"></span> ' . __('My shifts'));
     $content[] = buttons($buttons);
 
     $content[] = Shift_view_header($shift, $room);

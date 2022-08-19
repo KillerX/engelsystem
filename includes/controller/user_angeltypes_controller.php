@@ -28,12 +28,12 @@ function user_angeltypes_unconfirmed_hint()
 
     $count = count($unconfirmed_user_angeltypes);
     return _e(
-            'There is %d unconfirmed angeltype.',
-            'There are %d unconfirmed angeltypes.',
+            'There is %d unconfirmed usertype.',
+            'There are %d unconfirmed usertypes.',
             $count,
             [$count]
         )
-        . ' ' . __('Angel types which need approvals:')
+        . ' ' . __('User types which need approvals:')
         . ' ' . join(', ', $unconfirmed_links);
 }
 

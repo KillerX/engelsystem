@@ -248,7 +248,7 @@ msgid "faq.faq"
 msgstr "FAQ"
 
 msgid "faq.questions_link"
-msgstr "If you don't find an answer, you can <a href=\"%s\">ask the heaven</a>."
+msgstr "If you don't find an answer, you can <a href=\"%s\">ask the admins</a>."
 
 msgid "faq.edit"
 msgstr "Edit FAQ entry"

@@ -94,16 +94,15 @@ function User_settings_view(
                                 ),
                                 $user_source->settings->email_shiftinfo
                             ),
-                            form_checkbox(
+                            /*form_checkbox(
                                 'email_news',
                                 __('Notify me of new news'),
                                 $user_source->settings->email_news
-                            ),
-                            form_checkbox(
+                            ),                            form_checkbox(
                                 'email_by_human_allowed',
                                 __('Allow heaven angels to contact you by e-mail.'),
                                 $user_source->settings->email_human
-                            ),
+                            ),*/
                             $enable_goody ? form_checkbox(
                                 'email_goody',
                                 __('To receive vouchers, give consent that nick, email address, worked hours and shirt size will be stored until the next similar event.')
@@ -117,9 +116,10 @@ function User_settings_view(
                                 $personalData->shirt_size,
                                 __('Please select...')
                             ) : '',
-                            form_info('', __('Please visit the angeltypes page to manage your angeltypes.')),
+                            form_info('', __('Please visit the usertypes page to manage your usertypes.')),
                             form_submit('submit', __('Save'))
                         ]),
+                        /*
                         form([
                             form_info(__('Here you can choose your color settings:')),
                             form_select('theme', __('Color settings:'), $themes, $user_source->settings->theme),
@@ -129,7 +129,7 @@ function User_settings_view(
                             form_info(__('Here you can choose your language:')),
                             form_select('language', __('Language:'), $locales, $user_source->settings->language),
                             form_submit('submit_language', __('Save'))
-                        ]),
+                        ]),*/
                     ])
                 ])
         ]
@@ -612,7 +612,7 @@ function User_view(
     }
 
     return page_with_title(
-        '<span class="icon-icon_angel"></span> '
+        '<span class="bi bi-person-circle"></span> '
         . (
             (config('enable_pronoun') && $user_source->personalData->pronoun)
             ? '<small>' . htmlspecialchars($user_source->personalData->pronoun) . '</small> '
@@ -894,7 +894,7 @@ function User_Nick_render($user, $plain = false)
     }
 
     return render_profile_link(
-        '<span class="icon-icon_angel"></span> ' . htmlspecialchars($user->name) . '</a>',
+        '<span class="bi bi-person-circle"></span> ' . htmlspecialchars($user->name) . '</a>',
         $user->id,
         ($user->state->arrived ? '' : 'text-muted')
     );
@@ -956,7 +956,7 @@ function render_user_freeloader_hint()
 {
     if (User_is_freeloader(auth()->user())) {
         return sprintf(
-            __('You freeloaded at least %s shifts. Shift signup is locked. Please go to heavens desk to be unlocked again.'),
+            __('You missed least %s shifts. Job signup is locked. Please ask the admins to be unlocked again.'),
             config('max_freeloadable_shifts')
         );
     }

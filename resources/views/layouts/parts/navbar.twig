@@ -12,7 +12,7 @@
 <nav class="navbar fixed-top navbar-expand-lg border-bottom {{ theme['navbar_classes'] }}">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ url('/') }}">
-            <span class="icon-icon_angel"></span>
+            <span class="bi bi-person-circle"></span>
             <strong class="visible-lg-inline">{{ config('app_name')|upper }}</strong>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@
                 {{ menuUserHints() }}
 
                 {% if has_permission_to('user_myshifts') %}
-                    {{ _self.toolbar_item(user.name, url('users', {'action': 'view'}), 'users', 'icon icon-icon_angel') }}
+                    {{ _self.toolbar_item(user.name, url('users', {'action': 'view'}), 'users', 'bi bi-person-circle') }}
                 {% endif %}
 
                 <li class="nav-item dropdown">
