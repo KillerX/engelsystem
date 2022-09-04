@@ -109,6 +109,15 @@ $route->addGroup(
             }
         );
 
+        // User
+        $route->addGroup(
+            '/users',
+            function (RouteCollector $route) {
+                $route->get('/import', 'Admin\\ImportUsersCotroller@index');
+                $route->post('/import', 'Admin\\ImportUsersCotroller@process');
+            }
+        );
+
         // News
         $route->addGroup(
             '/news',

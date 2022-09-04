@@ -1,0 +1,27 @@
+{% extends "layouts/app.twig" %}
+{% import 'macros/base.twig' as m %}
+{% import 'macros/form.twig' as f %}
+
+{% block title %}{{ __('user.edit.shirt') }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ block('title') }}</h1>
+
+        {% include 'layouts/parts/messages.twig' %}
+
+        <form method="post" enctype="multipart/form-data">
+            {{ csrf() }}
+
+            <div class="row">
+                </div>
+                <div class="col-md-6">
+                    {{ f.input("userlist", "File to import", "file") }}
+                </div>
+                <div class="col-md-12">
+                    {{ f.submit(__('form.save')) }}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
