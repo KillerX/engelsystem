@@ -175,7 +175,7 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
     $content[] = Shift_view_header($shift, $room);
     $content[] = div('row', [
         div('col-sm-6', [
-            '<h2>' . __('Needed angels') . '</h2>',
+            '<h2>' . __('Needed workers') . '</h2>',
             '<div class="list-group">' . $needed_angels . '</div>'
         ]),
         div('col-sm-6', [

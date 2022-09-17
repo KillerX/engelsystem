@@ -10,7 +10,7 @@ use Illuminate\Database\Query\JoinClause;
  */
 function admin_active_title()
 {
-    return __('Active angels');
+    return __('Active workers');
 }
 
 /**
@@ -39,13 +39,13 @@ function admin_active()
             $count = strip_request_item('count');
             if ($count < $forced_count) {
                 error(sprintf(
-                    __('At least %s angels are forced to be active. The number has to be greater.'),
+                    __('At least %s workers are forced to be active. The number has to be greater.'),
                     $forced_count
                 ));
                 throw_redirect(page_link_to('admin_active'));
             }
         } else {
-            $msg .= error(__('Please enter a number of angels to be marked as active.'));
+            $msg .= error(__('Please enter a number of workers to be marked as active.'));
             throw_redirect(page_link_to('admin_active'));
         }
 
@@ -87,9 +87,9 @@ function admin_active()
                 $user_nicks[] = User_Nick_render($usr, true);
             }
 
-            engelsystem_log('These angels are active now: ' . join(', ', $user_nicks));
+            engelsystem_log('These workers are active now: ' . join(', ', $user_nicks));
 
-            $msg = success(__('Marked angels.'), true);
+            $msg = success(__('Marked workers.'), true);
         } else {
             $set_active = form([
                 button(page_link_to('admin_active', ['search' => $search]), '&laquo; ' . __('back')),
@@ -306,7 +306,7 @@ function admin_active()
             form_submit('submit', __('Search'))
         ], page_link_to('admin_active')),
         $set_active == '' ? form([
-            form_text('count', __('How much angels should be active?'), $count ? $count : $forced_count),
+            form_text('count', __('How much workers should be active?'), $count ? $count : $forced_count),
             form_submit('set_active', __('Preview'))
         ]) : $set_active,
         $msg . msg(),

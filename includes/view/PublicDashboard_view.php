@@ -23,7 +23,7 @@ function public_dashboard_view($stats, $free_shifts)
         $shift_panels[] = '</div>';
         $needed_angels = div('first', [
             div('col-md-12', [
-                heading(__('Needed angels:'), 1)
+                heading(__('Needed workers:'), 1)
             ]),
             div('container-fluid', [
                 join($shift_panels)
@@ -37,9 +37,9 @@ function public_dashboard_view($stats, $free_shifts)
         div('wrapper', [
             div('public-dashboard', [
                 div('first row', [
-                    stats(__('Angels needed in the next 3 hrs'), $stats['needed-3-hours']),
-                    stats(__('Angels needed for nightshifts'), $stats['needed-night']),
-                    stats(__('Angels currently working'), $stats['angels-working'], 'default'),
+                    stats(__('Workers needed in the next 3 hrs'), $stats['needed-3-hours']),
+                    stats(__('Workers needed for nightshifts'), $stats['needed-night']),
+                    stats(__('Workers currently working'), $stats['angels-working'], 'default'),
                     stats(__('Hours to be worked'), $stats['hours-to-work'], 'default'),
                     '<script>
                     $(function() {

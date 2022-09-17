@@ -153,21 +153,21 @@ function admin_shifts()
                         $needed_angel_types[$type['id']] = trim($request->input('type_' . $type['id'], 0));
                     } else {
                         $valid = false;
-                        error(sprintf(__('Please check the needed angels for team %s.'), $type['name']));
+                        error(sprintf(__('Please check the needed workers for team %s.'), $type['name']));
                     }
                 }
 
                 if (array_sum($needed_angel_types) == 0) {
                     $valid = false;
-                    error(__('There are 0 angels needed. Please enter the amounts of needed angels.'));
+                    error(__('There are 0 workers needed. Please enter the amounts of needed workers.'));
                 }
             } else {
                 $valid = false;
-                error(__('Please select a mode for needed angels.'));
+                error(__('Please select a mode for needed workers.'));
             }
         } else {
             $valid = false;
-            error(__('Please select needed angels.'));
+            error(__('Please select needed workers.'));
         }
 
         // Beim Zurück-Knopf das Formular zeigen
@@ -472,16 +472,16 @@ function admin_shifts()
                     )
                 ]),
                 div('col-md-6', [
-                    form_info(__('Needed angels'), ''),
+                    form_info(__('Needed workers'), ''),
                     form_radio(
                         'angelmode',
-                        __('Take needed angels from room settings'),
+                        __('Take needed workers from room settings'),
                         $angelmode == 'location',
                         'location'
                     ),
                     form_radio(
                         'angelmode',
-                        __('The following angels are needed'),
+                        __('The following workers are needed'),
                         $angelmode == 'manually',
                         'manually'
                     ),

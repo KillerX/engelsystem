@@ -100,7 +100,7 @@ function User_settings_view(
                                 $user_source->settings->email_news
                             ),                            form_checkbox(
                                 'email_by_human_allowed',
-                                __('Allow heaven angels to contact you by e-mail.'),
+                                __('Allow admin users to contact you by e-mail.'),
                                 $user_source->settings->email_human
                             ),*/
                             $enable_goody ? form_checkbox(

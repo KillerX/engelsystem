@@ -108,7 +108,7 @@ function admin_rooms()
                     } else {
                         $valid = false;
                         $msg .= error(sprintf(
-                            __('Please enter needed angels for type %s.'),
+                            __('Please enter needed workers for type %s.'),
                             $angeltype
                         ), true);
                     }
@@ -165,7 +165,7 @@ function admin_rooms()
                         div('col-md-6', [
                             div('row', [
                                 div('col-md-12', [
-                                    form_info(__('Needed angels:'))
+                                    form_info(__('Needed workers:'))
                                 ]),
                                 join($angeltypes_count_form)
                             ])

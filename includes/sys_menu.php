@@ -116,7 +116,7 @@ function make_navigation()
         // path              => [name, permission]
         'admin_arrive'       => __('Arrived Users'),
         'admin_active'       => __('Active Users'),
-        'users'              => ['All Angels', 'admin_user'],
+        'users'              => ['All Users', 'admin_user'],
         'admin_free'         => __('Free Users'),
         'admin/questions'    => ['Answer questions', 'question.edit'],
         'shifttypes'         => __('Job Types'),
