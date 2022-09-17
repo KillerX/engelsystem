@@ -321,7 +321,7 @@ class ShiftCalendarRenderer
         return div('legend mt-3', [
             badge(__('Your shift'), 'primary'),
             badge(__('Help needed'), 'danger'),
-            badge(__('Other angeltype needed / collides with my shifts'), 'warning'),
+            badge(__('Other usertypes needed / collides with my shifts'), 'warning'),
             badge(__('Shift is full'), 'success'),
             badge(__('Shift running/ended or user not arrived/allowed'), 'secondary')
         ]);
