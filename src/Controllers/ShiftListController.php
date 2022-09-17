@@ -86,30 +86,33 @@ class ShiftListController extends BaseController
             $shift_ids[] = $shift->SID;
         }
 
-        $shifts_needs = DB::select(DB::raw("
-            SELECT shift_id, angel_type_id, GREATEST(0, count-COALESCE(CNT, 0)) remaining FROM NeededAngelTypes nat
-            LEFT JOIN
-                (SELECT SID, TID, COUNT(*) as CNT FROM ShiftEntry GROUP BY SID, TID) c ON nat.shift_id = c.SID AND nat.angel_type_id = c.TID
-            WHERE shift_id IN (" . implode(',', $shift_ids) . ");
-        "), []);
 
-        foreach ($shifts as $shift) {
-            $shift->remaining = 0;
-            $shift->border = "primary";
+        if (count($shift_ids) > 0) {
+            $shifts_needs = DB::select(DB::raw("
+                SELECT shift_id, angel_type_id, GREATEST(0, count-COALESCE(CNT, 0)) remaining FROM NeededAngelTypes nat
+                LEFT JOIN
+                    (SELECT SID, TID, COUNT(*) as CNT FROM ShiftEntry GROUP BY SID, TID) c ON nat.shift_id = c.SID AND nat.angel_type_id = c.TID
+                WHERE shift_id IN (" . implode(',', $shift_ids) . ");
+            "), []);
 
-            foreach ($shift->neededAngels as $na) {
-                $na->remaining = 0;
-                foreach ($shifts_needs as $sn) {
-                    if ($sn->shift_id == $na->shift_id && $sn->angel_type_id == $na->angel_type_id) {
-                        $na->remaining = $sn->remaining;
-                        $shift->remaining += $na->remaining;
-                        break;
+            foreach ($shifts as $shift) {
+                $shift->remaining = 0;
+                $shift->border = "primary";
+
+                foreach ($shift->neededAngels as $na) {
+                    $na->remaining = 0;
+                    foreach ($shifts_needs as $sn) {
+                        if ($sn->shift_id == $na->shift_id && $sn->angel_type_id == $na->angel_type_id) {
+                            $na->remaining = $sn->remaining;
+                            $shift->remaining += $na->remaining;
+                            break;
+                        }
                     }
                 }
-            }
 
-            if ($shift->remaining == 0) {
-                $shift->border = "success";
+                if ($shift->remaining == 0) {
+                    $shift->border = "success";
+                }
             }
         }
 

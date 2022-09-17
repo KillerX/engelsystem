@@ -557,7 +557,7 @@ function AngelTypes_about_view_angeltype($angeltype)
 
     if ($angeltype['restricted']) {
         $html .= info(
-            __('This angeltype requires the attendance at an introduction meeting. You might find additional information in the description.'),
+            __('This job is restricted for certain users. Contact an admin for more information'),
             true
         );
     }
