@@ -57,8 +57,8 @@ function AngelType_render_membership($user_angeltype)
  */
 function AngelType_delete_view($angeltype)
 {
-    return page_with_title(sprintf(__('Delete angeltype %s'), $angeltype['name']), [
-        info(sprintf(__('Do you want to delete angeltype %s?'), $angeltype['name']), true),
+    return page_with_title(sprintf(__('Delete usertype %s'), $angeltype['name']), [
+        info(sprintf(__('Do you want to delete usertype %s?'), $angeltype['name']), true),
         form([
             buttons([
                 button(page_link_to('angeltypes'), icon('x-lg') . __('cancel')),
@@ -79,7 +79,7 @@ function AngelType_edit_view($angeltype, $supporter_mode)
 {
     return page_with_title(sprintf(__('Edit %s'), $angeltype['name']), [
         buttons([
-            button(page_link_to('angeltypes'), __('Angeltypes'), 'back')
+            button(page_link_to('angeltypes'), __('Usertypes'), 'back')
         ]),
         msg(),
         form([
@@ -91,7 +91,7 @@ function AngelType_edit_view($angeltype, $supporter_mode)
                 : form_checkbox('restricted', __('Requires confirmation'), $angeltype['restricted']),
             form_info(
                 '',
-                __('Angel types which require confirmation can only be used by a user if confirmed by a supporter.')
+                __('User types which require confirmation can only be used by a user if confirmed by a supporter.')
             ),
             $supporter_mode
                 ? form_info(__('No Self Sign Up allowed'), $angeltype['no_self_signup'] ? __('Yes') : __('No'))
@@ -137,7 +137,7 @@ function AngelType_edit_view($angeltype, $supporter_mode)
 function AngelType_view_buttons($angeltype, $user_angeltype, $admin_angeltypes, $supporter, $user_driver_license, $user)
 {
     $buttons = [
-        button(page_link_to('angeltypes'), __('Angeltypes'), 'back')
+        button(page_link_to('angeltypes'), __('Usertypes'), 'back')
     ];
 
     if ($angeltype['requires_driver_license']) {
@@ -155,12 +155,12 @@ function AngelType_view_buttons($angeltype, $user_angeltype, $admin_angeltypes, 
         );
     } else {
         if ($angeltype['requires_driver_license'] && !$user_driver_license->wantsToDrive()) {
-            error(__('This angeltype requires a driver license. Please enter your driver license information!'));
+            error(__('This usertype requires a driver license. Please enter your driver license information!'));
         }
 
         if ($angeltype['restricted'] && empty($user_angeltype['confirm_user_id'])) {
             error(sprintf(
-                __('You are unconfirmed for this angeltype. Please contact %s to get confirmed.'),
+                __('You are unconfirmed for this usertype. Please contact %s to get confirmed.'),
                 $angeltype['name']
             ));
         }
@@ -202,6 +202,7 @@ function AngelType_view_members($angeltype, $members, $admin_user_angeltypes, $a
     $supporters = [];
     $members_confirmed = [];
     $members_unconfirmed = [];
+
     foreach ($members as $member) {
         $member->name = User_Nick_render($member) . User_Pronoun_render($member);
         $member['dect'] = $member->contact->dect;
@@ -415,57 +416,58 @@ function AngelType_view_info(
     );
     $table_headers = AngelType_view_table_headers($angeltype, $supporter, $admin_angeltypes);
 
-    if (count($supporters) > 0) {
-        $info[] = '<h3>' . __('Supporters') . '</h3>';
-        $info[] = table($table_headers, $supporters);
-    }
-
-    if (count($members_confirmed) > 0) {
-        $members_confirmed[] = [
-            'name'    => __('Sum'),
-            'dect'    => count($members_confirmed),
-            'actions' => ''
-        ];
-    }
-
-    if (count($members_unconfirmed) > 0) {
-        $members_unconfirmed[] = [
-            'name'    => __('Sum'),
-            'dect'    => count($members_unconfirmed),
-            'actions' => ''
-        ];
-    }
-
-    $info[] = '<h3>' . __('Members') . '</h3>';
     if ($admin_user_angeltypes) {
-        $info[] = buttons([
-            button(
-                page_link_to(
-                    'user_angeltypes',
-                    ['action' => 'add', 'angeltype_id' => $angeltype['id']]
+        if (count($supporters) > 0) {
+            $info[] = '<h3>' . __('Supporters') . '</h3>';
+            $info[] = table($table_headers, $supporters);
+        }
+
+        if (count($members_confirmed) > 0) {
+            $members_confirmed[] = [
+                'name'    => __('Sum'),
+                'dect'    => count($members_confirmed),
+                'actions' => ''
+            ];
+        }
+
+        if (count($members_unconfirmed) > 0) {
+            $members_unconfirmed[] = [
+                'name'    => __('Sum'),
+                'dect'    => count($members_unconfirmed),
+                'actions' => ''
+            ];
+        }
+
+        $info[] = '<h3>' . __('Members') . '</h3>';
+        if ($admin_user_angeltypes) {
+            $info[] = buttons([
+                button(
+                    page_link_to(
+                        'user_angeltypes',
+                        ['action' => 'add', 'angeltype_id' => $angeltype['id']]
+                    ),
+                    __('Add'),
+                    'add'
+                )
+            ]);
+        }
+        $info[] = table($table_headers, $members_confirmed);
+
+        if ($admin_user_angeltypes && $angeltype['restricted'] && count($members_unconfirmed) > 0) {
+            $info[] = '<h3>' . __('Unconfirmed') . '</h3>';
+            $info[] = buttons([
+                button(
+                    page_link_to('user_angeltypes', ['action' => 'confirm_all', 'angeltype_id' => $angeltype['id']]),
+                    icon('check-lg') . __('confirm all')
                 ),
-                __('Add'),
-                'add'
-            )
-        ]);
+                button(
+                    page_link_to('user_angeltypes', ['action' => 'delete_all', 'angeltype_id' => $angeltype['id']]),
+                    icon('trash') . __('deny all')
+                )
+            ]);
+            $info[] = table($table_headers, $members_unconfirmed);
+        }
     }
-    $info[] = table($table_headers, $members_confirmed);
-
-    if ($admin_user_angeltypes && $angeltype['restricted'] && count($members_unconfirmed) > 0) {
-        $info[] = '<h3>' . __('Unconfirmed') . '</h3>';
-        $info[] = buttons([
-            button(
-                page_link_to('user_angeltypes', ['action' => 'confirm_all', 'angeltype_id' => $angeltype['id']]),
-                icon('check-lg') . __('confirm all')
-            ),
-            button(
-                page_link_to('user_angeltypes', ['action' => 'delete_all', 'angeltype_id' => $angeltype['id']]),
-                icon('trash') . __('deny all')
-            )
-        ]);
-        $info[] = table($table_headers, $members_unconfirmed);
-    }
-
     return join($info);
 }
 

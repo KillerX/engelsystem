@@ -400,10 +400,10 @@ function admin_shifts()
                     }
                 }
             }
-            engelsystem_log('Shift needs following angel types: ' . join(', ', $needed_angel_types_info));
+            engelsystem_log('Shift needs following user types: ' . join(', ', $needed_angel_types_info));
         }
 
-        success('Schichten angelegt.');
+        success('Shifts created.');
         throw_redirect(page_link_to('admin_shifts'));
     } else {
         $session->remove('admin_shifts_shifts');
@@ -431,7 +431,7 @@ function admin_shifts()
                 div('col-md-6', [
                     form_select('shifttype_id', __('Job Type'), $shifttypes, $shifttype_id),
                     form_text('title', __('Title'), $title),
-                    form_select('rid', __('Room'), $room_array, $rid),
+                    form_select('rid', __('Location'), $room_array, $rid),
                 ]),
                 div('col-md-6', [
                     form_textarea('description', __('Additional description'), $description),
@@ -475,7 +475,7 @@ function admin_shifts()
                     form_info(__('Needed workers'), ''),
                     form_radio(
                         'angelmode',
-                        __('Take needed workers from room settings'),
+                        __('Take needed workers from location settings'),
                         $angelmode == 'location',
                         'location'
                     ),

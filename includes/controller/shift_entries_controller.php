@@ -188,7 +188,7 @@ function shift_entry_create_controller_supporter($shift, $angeltype): array
 function shift_entry_error_message(ShiftSignupState $shift_signup_state)
 {
     if ($shift_signup_state->getState() == ShiftSignupState::ANGELTYPE) {
-        error(__('You need be accepted member of the angeltype.'));
+        error(__('You must be accepted for this user type. Contact an admin with any questions.'));
     } elseif ($shift_signup_state->getState() == ShiftSignupState::COLLIDES) {
         error(__('This shift collides with one of your shifts.'));
     } elseif ($shift_signup_state->getState() == ShiftSignupState::OCCUPIED) {

@@ -134,10 +134,10 @@ function admin_rooms()
                     }
 
                     engelsystem_log(
-                        'Set needed angeltypes of room ' . $name
+                        'Set needed usertypes of location ' . $name
                         . ' to: ' . join(', ', $needed_angeltype_info)
                     );
-                    success(__('Room saved.'));
+                    success(__('Location saved.'));
                     throw_redirect(page_link_to('admin_rooms'));
                 }
             }
@@ -158,7 +158,7 @@ function admin_rooms()
                         div('col-md-6', [
                             form_text('name', __('Name'), $name, false, 35),
                             form_text('map_url', __('Map URL'), $map_url),
-                            form_info('', __('The map url is used to display an iframe on the room page.')),
+                            form_info('', __('The map url is used to display an iframe on the location page.')),
                             form_textarea('description', __('Description'), $description),
                             form_info('', __('Please use markdown for the description.')),
                         ]),
@@ -187,7 +187,7 @@ function admin_rooms()
 
                 Room_delete($room);
 
-                success(sprintf(__('Room %s deleted.'), $name));
+                success(sprintf(__('Location %s deleted.'), $name));
                 throw_redirect(page_link_to('admin_rooms'));
             }
 
@@ -195,7 +195,7 @@ function admin_rooms()
                 buttons([
                     button(page_link_to('admin_rooms'), __('back'), 'back')
                 ]),
-                sprintf(__('Do you want to delete room %s?'), $name),
+                sprintf(__('Do you want to delete location %s?'), $name),
                 form([
                     form_submit('ack', __('Delete'), 'delete btn-danger'),
                 ], page_link_to('admin_rooms', ['show' => 'delete', 'id' => $room_id])),

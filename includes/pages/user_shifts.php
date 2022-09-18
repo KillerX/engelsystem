@@ -148,7 +148,7 @@ function load_types()
     $user = auth()->user();
 
     if (!count(DB::select('SELECT `id`, `name` FROM `AngelTypes`'))) {
-        error(__('The administration has not configured any angeltypes yet - or you are not subscribed to any angeltype.'));
+        error(__('The administration has not configured any usertypes yet - or you are not subscribed to any usertype.'));
         if (config('home_site') != 'user_shifts') {
             throw_redirect(page_link_to('/'));
         }
@@ -248,7 +248,7 @@ function view_user_shifts()
             msg(),
             view(__DIR__ . '/../../resources/views/pages/user-shifts.html', [
                 'title'         => shifts_title(),
-                'room_select'   => make_select($rooms, $shiftsFilter->getRooms(), 'rooms', __('Rooms')),
+                'room_select'   => make_select($rooms, $shiftsFilter->getRooms(), 'rooms', __('Locations')),
                 'start_select'  => html_select_key(
                     'start_day',
                     'start_day',
@@ -267,7 +267,7 @@ function view_user_shifts()
                     $types,
                     $shiftsFilter->getTypes(),
                     'types',
-                    __('Angeltypes') . '<sup>1</sup>',
+                    __('Usertypes') . '<sup>1</sup>',
                     [
                         button(
                             'javascript: checkOwnTypes(\'selection_types\', ' . json_encode($ownTypes) . ')',
@@ -279,7 +279,7 @@ function view_user_shifts()
                 'filled_select' => make_select($filled, $shiftsFilter->getFilled(), 'filled', __('Occupancy')),
                 'task_notice'   =>
                     '<sup>1</sup>'
-                    . __('The tasks shown here are influenced by the angeltypes you joined already!')
+                    . __('The tasks shown here are influenced by the usertypes you joined already!')
                     . ' <a href="' . page_link_to('angeltypes', ['action' => 'about']) . '">'
                     . __('Description of the jobs.')
                     . '</a>',

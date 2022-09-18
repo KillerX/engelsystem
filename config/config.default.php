@@ -35,7 +35,7 @@ return [
     // Footer links
     'footer_items'            => [
         // URL to the angel faq and job description
-        'FAQ'     => env('FAQ_URL', '/faq'),
+        //'FAQ'     => env('FAQ_URL', '/faq'),
 
         // Contact email address, linked on every page
         'Contact' => env('CONTACT_EMAIL', 'mailto:ticket@c3heaven.de'),

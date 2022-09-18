@@ -677,6 +677,10 @@ function User_view(
                     ])
                 ])
             ]),
+            div(
+                'row',
+                div('col-md-8', ["Calendar link:", page_link_to('ical', ['key' => $user_source->api_key])]),
+            ),
             div('row user-info', [
                 div('col-md-2', [
                     heading(icon('phone')
@@ -890,11 +894,11 @@ function User_Nick_render($user, $plain = false)
     }
 
     if ($plain) {
-        return sprintf('%s (%u)', $user->name, $user->id);
+        return sprintf('%s (%u)', $user->personalData->first_name . ' ' . $user->personalData->last_name, $user->id);
     }
 
     return render_profile_link(
-        '<span class="bi bi-person-circle"></span> ' . htmlspecialchars($user->name) . '</a>',
+        '<span class="bi bi-person-circle"></span> ' . htmlspecialchars($user->personalData->first_name . ' ' . $user->personalData->last_name) . '</a>',
         $user->id,
         ($user->state->arrived ? '' : 'text-muted')
     );
