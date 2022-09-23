@@ -2,14 +2,11 @@
 {% import 'macros/base.twig' as m %}
 {% import 'macros/form.twig' as f %}
 
-{% block title %}
-    {{ __('Jobs') }}
-{% endblock %}
 
 {% block content %}
     <div class="container">
         <h1>
-            {{ block('title') }}
+            {{ title }}
         </h1>
 
         {% include 'layouts/parts/messages.twig' %}

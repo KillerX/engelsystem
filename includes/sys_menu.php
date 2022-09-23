@@ -120,6 +120,7 @@ function make_navigation()
         'admin_free'         => __('Free Users'),
         'admin/questions'    => ['Answer questions', 'question.edit'],
         'shifttypes'         => __('Job Types'),
+        'shifts/history'     => [__('Shift History'), '*'],
         'admin_shifts'       => __('Create shifts'),
         'admin_rooms'        => __('Locations'),
         'admin_groups'       => __('Grouprights'),

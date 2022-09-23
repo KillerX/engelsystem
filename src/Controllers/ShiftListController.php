@@ -122,6 +122,7 @@ class ShiftListController extends BaseController
                 'sch' => $shifts,
                 'admin' => false,
                 'user' => $user,
+                'title' => 'Upcming jobs',
             ]
         );
     }
@@ -136,7 +137,11 @@ class ShiftListController extends BaseController
             return $this->redirect->to('/');
         }
 
-        $shifts = $this->shift->with(['neededAngels'])->where('start', '<', time())->orderBy('start', 'DESC')->get();
+        $shifts = $this->shift->with(['neededAngels'])
+                              ->where('start', '<', time())
+                              ->orderBy('start', 'DESC')
+                              ->limit(100)
+                              ->get();
 
         $shift_ids = [];
         foreach ($shifts as $shift) {
@@ -179,6 +184,7 @@ class ShiftListController extends BaseController
                 'sch' => $shifts,
                 'admin' => false,
                 'user' => $user,
+                'title' => 'Job history',
             ]
         );
     }
