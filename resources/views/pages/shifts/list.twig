@@ -31,7 +31,7 @@
                             {% if needed.count > 0 %}
                                 <div class="col-md-12" style="padding-bottom: 10px;">
                                     <strong>
-                                        <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1"> {{ needed.remaining }}/{{ needed.count }} registered</span>
+                                        <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1"> {{ needed.count - needed.remaining }}/{{ needed.count }} registered</span>
                                     <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
                                     <br/>
                                 </div>

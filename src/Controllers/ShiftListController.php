@@ -125,4 +125,61 @@ class ShiftListController extends BaseController
             ]
         );
     }
+
+    /**
+     * @return Response
+     */
+    public function history(Request $request): Response
+    {
+        $user = $this->auth->user();
+        if (!$user) {
+            return $this->redirect->to('/');
+        }
+
+        $shifts = $this->shift->with(['neededAngels'])->where('start', '<', time())->orderBy('start', 'DESC')->get();
+
+        $shift_ids = [];
+        foreach ($shifts as $shift) {
+            $shift_ids[] = $shift->SID;
+        }
+
+
+        if (count($shift_ids) > 0) {
+            $shifts_needs = DB::select(DB::raw("
+                SELECT shift_id, angel_type_id, GREATEST(0, count-COALESCE(CNT, 0)) remaining FROM NeededAngelTypes nat
+                LEFT JOIN
+                    (SELECT SID, TID, COUNT(*) as CNT FROM ShiftEntry GROUP BY SID, TID) c ON nat.shift_id = c.SID AND nat.angel_type_id = c.TID
+                WHERE shift_id IN (" . implode(',', $shift_ids) . ");
+            "), []);
+
+            foreach ($shifts as $shift) {
+                $shift->remaining = 0;
+                $shift->border = "primary";
+
+                foreach ($shift->neededAngels as $na) {
+                    $na->remaining = 0;
+                    foreach ($shifts_needs as $sn) {
+                        if ($sn->shift_id == $na->shift_id && $sn->angel_type_id == $na->angel_type_id) {
+                            $na->remaining = $sn->remaining;
+                            $shift->remaining += $na->remaining;
+                            break;
+                        }
+                    }
+                }
+
+                if ($shift->remaining == 0) {
+                    $shift->border = "success";
+                }
+            }
+        }
+
+        return $this->response->withView(
+            'pages/shifts/list.twig',
+            [
+                'sch' => $shifts,
+                'admin' => false,
+                'user' => $user,
+            ]
+        );
+    }
 }

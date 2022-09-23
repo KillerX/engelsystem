@@ -104,7 +104,7 @@ function admin_user()
 
         $html .= '</td></tr>' . "\n";
         $html .= '</table>' . "\n" . '<br />' . "\n";
-        $html .= '<input type="submit" value="Speichern" class="btn btn-primary">';
+        $html .= '<input type="submit" value="Save" class="btn btn-primary">';
         $html .= '</form>';
 
         $html .= '<hr />';
@@ -120,7 +120,7 @@ function admin_user()
         $html .= '  <tr><td>Wiederholung</td><td>' . '<input type="password" size="40" name="new_pw2" value="" class="form-control"></td></tr>' . "\n";
 
         $html .= '</table>' . "\n" . '<br />' . "\n";
-        $html .= '<input type="submit" value="Speichern" class="btn btn-primary">' . "\n";
+        $html .= '<input type="submit" value="Save" class="btn btn-primary">' . "\n";
         $html .= '</form>';
 
         $html .= '<hr />';
@@ -174,7 +174,7 @@ function admin_user()
 
             $html .= '</table><br>';
 
-            $html .= '<input type="submit" value="Speichern" class="btn btn-primary">' . "\n";
+            $html .= '<input type="submit" value="Save" class="btn btn-primary">' . "\n";
             $html .= '</form>';
 
             $html .= '<hr />';
