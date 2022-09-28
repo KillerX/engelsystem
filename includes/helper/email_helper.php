@@ -20,14 +20,14 @@ function engelsystem_email_to_user($recipientUser, $title, $message, $notIfItsMe
 
     /** @var Translator $translator */
     $translator = app()->get('translator');
-    $locale = $translator->getLocale();
+    $locale = 'en'; //$translator->getLocale();
 
     $status = true;
     try {
         /** @var EngelsystemMailer $mailer */
         $mailer = app('mailer');
 
-        $translator->setLocale($recipientUser->settings->language);
+        $translator->setLocale('en_US');//$recipientUser->settings->language);
         $mailer->sendView(
             $recipientUser->contact->email ? $recipientUser->contact->email : $recipientUser->email,
             $title,

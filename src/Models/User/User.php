@@ -3,6 +3,7 @@
 namespace Engelsystem\Models\User;
 
 use Carbon\Carbon;
+use Engelsystem\Models\AngelType;
 use Engelsystem\Models\BaseModel;
 use Engelsystem\Models\Message;
 use Engelsystem\Models\News;
@@ -13,6 +14,7 @@ use Engelsystem\Models\Worklog;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -224,5 +226,10 @@ class User extends BaseModel
             ->union($this->messagesReceived())
             ->orderBy('read')
             ->orderBy('id', 'DESC');
+    }
+
+    public function angelTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(AngelType::class, 'UserAngelTypes', 'user_id', 'angeltype_id');
     }
 }

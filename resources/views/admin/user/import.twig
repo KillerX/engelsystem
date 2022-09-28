@@ -9,6 +9,7 @@
         <h1>{{ block('title') }}</h1>
 
         {% include 'layouts/parts/messages.twig' %}
+        Imported Users: {{ userCount }} <br />
 
         <form method="post" enctype="multipart/form-data">
             {{ csrf() }}

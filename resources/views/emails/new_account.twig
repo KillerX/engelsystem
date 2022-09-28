@@ -1,0 +1,10 @@
+{% extends "emails/mail.twig" %}
+
+{% block message %}A new account has been created for you at https://jobb.bd-service.no/
+
+    You can log in with your email address and the following temporary password:
+
+    {{ pass }}
+
+    Please change it at https://jobb.bd-service.no/settings/password
+{% endblock %}

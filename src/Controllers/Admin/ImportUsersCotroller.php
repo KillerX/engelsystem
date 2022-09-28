@@ -3,17 +3,22 @@
 namespace Engelsystem\Controllers\Admin;
 
 use Engelsystem\Controllers\BaseController;
-use Engelsystem\Controllers\CleanupModel;
-use Engelsystem\Controllers\HasUserNotifications;
+use Engelsystem\Helpers\Authenticator;
 use Engelsystem\Http\Redirector;
+use Engelsystem\Mail\EngelsystemMailer;
+use Illuminate\Database\Capsule\Manager as DB;
 use Engelsystem\Http\Request;
 use Engelsystem\Http\Response;
 use Engelsystem\Models\Faq;
 use Engelsystem\Models\User\User;
 use Psr\Log\LoggerInterface;
+use Engelsystem\Models\AngelType;
 
 class ImportUsersCotroller extends BaseController
 {
+    /** @var Authenticator */
+    protected $auth;
+
     /** @var LoggerInterface */
     protected $log;
 
@@ -29,6 +34,12 @@ class ImportUsersCotroller extends BaseController
     /** @var Response */
     protected $response;
 
+    /** @var AngelType */
+    protected $angelType;
+
+    /** @var EngelsystemMailer */
+    protected $mail;
+
     /** @var array */
     protected $permissions = [
         'admin_user',
@@ -40,6 +51,8 @@ class ImportUsersCotroller extends BaseController
      * @param Redirector      $redirector
      * @param Response        $response
      * @param User            $user
+     * @param AngelType       $angelType
+     * @param EngelsystemMailer $mail
      */
     public function __construct(
         LoggerInterface $log,
@@ -47,13 +60,31 @@ class ImportUsersCotroller extends BaseController
         Redirector $redirector,
         Response $response,
         User $user,
+        AngelType $angelType,
+        EngelsystemMailer $mail,
+        Authenticator $auth,
     ) {
         $this->log = $log;
         $this->faq = $faq;
         $this->redirect = $redirector;
         $this->response = $response;
         $this->user = $user;
+        $this->angelType = $angelType;
+        $this->mail = $mail;
+        $this->auth = $auth;
     }
+
+    public function generateRandomString($length = 10): string
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
 
     /**
      * @param Request $request
@@ -64,7 +95,9 @@ class ImportUsersCotroller extends BaseController
     {
         return $this->response->withView(
             'admin/user/import.twig',
-            []
+            [
+                'userCount' => '',
+            ]
         );
     }
 
@@ -79,36 +112,104 @@ class ImportUsersCotroller extends BaseController
         if (count($files) != 1) {
             return $this->response->withView(
                 'admin/user/import.twig',
-                []
+                [
+                    'userCount' => '',
+                ]
             );
         }
+
+        $this->mail->sendView(
+            $this->auth->user()->email,
+            'BD-Service Account',
+            'emails/new_account',
+            [
+                'username' => $this->user->name,
+                'pass' => "BLAH",
+            ]
+        );
+
+        die();
+
+        $angelTypes = $this->angelType->get();
+        $angelTypesMap = [];
+
+        foreach ($angelTypes as $t) {
+            $angelTypesMap[$t->name] = $t;
+        }
+
+
         $lines = explode("\n", $files[0]->getStream()->getContents());
-        array_shift($lines); // Drop headers
+
+        $header = str_getcsv(array_shift($lines));
+
+        $angelTypesInFile = (array_slice($header, 7));
+
+        foreach ($angelTypesInFile as $i => $atif) {
+            if (!array_key_exists($atif, $angelTypesMap)) {
+                die("Unknown worker type: " . $atif);
+            }
+
+            $angelTypesMap[$i] = $angelTypesMap[$atif];
+        }
+
+        $userCount = 0;
+
         foreach ($lines as $l) {
             if ($l == "") {
                 continue;
             }
 
-            // username,password,email,mobile,first,last
+            // Ansattnummer,Fornavn,Etternavn,Født,E-postadresse,Telefonnummer,Alder, <JOBS> ....
+            // 0           ,   1   ,    2    , 3  ,       4     ,      5      , 6   ,      7    ,           8
             $u = str_getcsv($l);
+
+            $username = $u[1] . " " . $u[2];
+            $password = $this->generateRandomString(8);
+
             $usr = new User();
-            $usr->name = $u[0];
-            $usr->password = password_hash($u[1], PASSWORD_DEFAULT);
-            $usr->email = $u[2];
+            $usr->name = $username;
+            $usr->password = password_hash($password, PASSWORD_DEFAULT);
+            $usr->email = $u[4];
             $usr->api_key = md5($u[0] . rand() . time() . rand());
             $usr->save();
 
-            $usr->contact->email = $u[2];
-            $usr->contact->mobile = $u[3];
+            $usr->contact->email = $u[4];
+            $usr->contact->mobile = $u[5];
 
-            $usr->personalData->first_name = $u[4];
-            $usr->personalData->last_name = $u[5];
+            $usr->personalData->first_name = $u[1];
+            $usr->personalData->last_name = $u[2];
+            $usr->personalData->employee_number = $u[0];
+            $usr->personalData->birthday = $u[3];
+            //$bday = date_parse_from_format('j/n/Y', $u[3]);
+
+            $angelTypesToAssignIDs = [];
+
+            $angelTypesToAssign = array_slice($u, 7);
+            print_r($angelTypesToAssign);
+            foreach ($angelTypesToAssign as $i => $toAssign) {
+                if (strtolower($toAssign) != 'yes') {
+                    continue;
+                }
+
+                $angelTypesToAssignIDs[] = $angelTypesMap[$i]->id;
+            }
+
+            $usr->angelTypes()->sync($angelTypesToAssignIDs);
             $usr->push();
+
+            DB::table('UserGroups')->insert([
+                'uid' => $usr->id,
+                'group_id' => -20, // Worker
+            ]);
+
+            $userCount++;
         }
 
         return $this->response->withView(
             'admin/user/import.twig',
-            []
+            [
+                'userCount' => $userCount,
+            ]
         );
     }
 }

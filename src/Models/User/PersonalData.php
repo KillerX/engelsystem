@@ -32,6 +32,7 @@ class PersonalData extends HasUserModel
     protected $dates = [
         'planned_arrival_date',
         'planned_departure_date',
+        'birthday',
     ];
 
     /** The attributes that are mass assignable. */

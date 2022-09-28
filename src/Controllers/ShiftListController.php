@@ -122,7 +122,7 @@ class ShiftListController extends BaseController
                 'sch' => $shifts,
                 'admin' => false,
                 'user' => $user,
-                'title' => 'Upcming jobs',
+                'title' => 'Upcoming jobs',
             ]
         );
     }
