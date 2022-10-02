@@ -29,11 +29,14 @@
                                 <div class="col-md-12" style="padding-bottom: 10px;">
                                     <strong>
                                         <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1"> {{ needed.count - needed.remaining }}/{{ needed.count }} registered</span>
-                                    <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
+                                    {% if needed.remaining > 0 and not s.registered %}
+                                        <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
+                                    {% endif %}
                                     <br/>
                                 </div>
                             {% endif %}
                         {% endfor %}
+                        <small>ID: {{ s.SID }}</small>
                     </div>
             </div>
         </div>

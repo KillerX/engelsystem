@@ -1,3 +1,22 @@
+{#
+-jobb tittel
+-dato for jobben
+-tid (start og slutt)
+-(beregn hvor mange timer)
+-rolle (servitør,renhold osv.)
+-fornavn
+-etternavn
+-phone number
+-og alder per jobbdato
+#}
+ID,{{ job.SID }}
+Name,{{ job.title }}
+Date,{{ job.start | date('Y-m-d') }}
+
+Start,End,Hours,Role,First Name,Last Name,Mobile,Birthday
 {% for s in sch %}
-{{s.user.id}}, {{s.user.name}}, {{s.user.personalData.first_name}}, {{s.user.personalData.last_name}}
+{{job.start | date('Y-m-d H:i:s')}},{{job.end | date('Y-m-d H:i:s')}},{{ (job.end-job.start)/60/60 }},{{ s.angelType.name }},{{s.user.personalData.first_name}},{{ s.user.personalData.last_name }},{{ s.user.contact.mobile }},{{ s.user.personalData.birthday | date('r') }}
+:q
+:q
+:q
 {% endfor %}

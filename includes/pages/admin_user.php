@@ -109,15 +109,15 @@ function admin_user()
 
         $html .= '<hr />';
 
-        $html .= form_info('', __('Please visit the angeltypes page or the users profile to manage users angeltypes.'));
+        $html .= form_info('', __('Please visit the usertypes page or the users profile to manage users angeltypes.'));
 
-        $html .= 'Hier kannst Du das Passwort dieses Engels neu setzen:<form action="'
+        $html .= 'Here you can reset the users password:<form action="'
             . page_link_to('admin_user', ['action' => 'change_pw', 'id' => $user_id])
             . '" method="post">' . "\n";
         $html .= form_csrf();
         $html .= '<table>' . "\n";
-        $html .= '  <tr><td>Passwort</td><td>' . '<input type="password" size="40" name="new_pw" value="" class="form-control"></td></tr>' . "\n";
-        $html .= '  <tr><td>Wiederholung</td><td>' . '<input type="password" size="40" name="new_pw2" value="" class="form-control"></td></tr>' . "\n";
+        $html .= '  <tr><td>Password</td><td>' . '<input type="password" size="40" name="new_pw" value="" class="form-control"></td></tr>' . "\n";
+        $html .= '  <tr><td>Repeat</td><td>' . '<input type="password" size="40" name="new_pw2" value="" class="form-control"></td></tr>' . "\n";
 
         $html .= '</table>' . "\n" . '<br />' . "\n";
         $html .= '<input type="submit" value="Save" class="btn btn-primary">' . "\n";
@@ -145,7 +145,7 @@ function admin_user()
             ($user_id != $user->id || auth()->can('admin_groups'))
             && ($my_highest_group <= $his_highest_group || is_null($his_highest_group))
         ) {
-            $html .= 'Hier kannst Du die Benutzergruppen des Engels festlegen:<form action="'
+            $html .= 'Here you can set up the groups for the users:<form action="'
                 . page_link_to('admin_user', ['action' => 'save_groups', 'id' => $user_id])
                 . '" method="post">' . "\n";
             $html .= form_csrf();
@@ -248,12 +248,12 @@ function admin_user()
                             'Set groups of ' . User_Nick_render($user_source, true) . ' to: '
                             . join(', ', $user_groups_info)
                         );
-                        $html .= success('Benutzergruppen gespeichert.', true);
+                        $html .= success('Usergroups saved.', true);
                     } else {
-                        $html .= error('Du kannst keine Engel mit mehr Rechten bearbeiten.', true);
+                        $html .= error('You do not have permission to edit users.', true);
                     }
                 } else {
-                    $html .= error('Du kannst Deine eigenen Rechte nicht bearbeiten.', true);
+                    $html .= error('You can not edit your own rights.', true);
                 }
                 break;
 
@@ -292,7 +292,7 @@ function admin_user()
                     . ', force-active: ' . $user_source->state->force_active
                     . ', tshirt: ' . $user_source->state->got_shirt
                 );
-                $html .= success('Änderung wurde gespeichert...' . "\n", true);
+                $html .= success('Changes saved...' . "\n", true);
                 break;
 
             case 'change_pw':
@@ -303,10 +303,10 @@ function admin_user()
                     $user_source = User::find($user_id);
                     auth()->setPassword($user_source, $request->postData('new_pw'));
                     engelsystem_log('Set new password for ' . User_Nick_render($user_source, true));
-                    $html .= success('Passwort neu gesetzt.', true);
+                    $html .= success('Password reset.', true);
                 } else {
                     $html .= error(
-                        'Die Eingaben müssen übereinstimmen und dürfen nicht leer sein!',
+                        'The fields must be identical and not empty',
                         true
                     );
                 }

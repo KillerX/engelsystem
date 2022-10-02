@@ -5,6 +5,7 @@ namespace Engelsystem\Models\Shifts;
 use Carbon\Carbon;
 use Engelsystem\Models\BaseModel;
 use Engelsystem\Models\User\User;
+use Engelsystem\Models\AngelType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -54,6 +55,12 @@ class ShiftEntry extends BaseModel
     public function user(): HasOne
     {
         $r = $this->hasOne(User::class, 'id', 'UID');
+        return $r;
+    }
+
+    public function angelType(): HasOne
+    {
+        $r = $this->hasOne(AngelType::class, 'id', 'TID');
         return $r;
     }
 }

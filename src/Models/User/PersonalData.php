@@ -44,5 +44,6 @@ class PersonalData extends HasUserModel
         'shirt_size',
         'planned_arrival_date',
         'planned_departure_date',
+        'birthday',
     ];
 }

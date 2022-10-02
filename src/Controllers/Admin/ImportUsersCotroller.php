@@ -118,18 +118,6 @@ class ImportUsersCotroller extends BaseController
             );
         }
 
-        $this->mail->sendView(
-            $this->auth->user()->email,
-            'BD-Service Account',
-            'emails/new_account',
-            [
-                'username' => $this->user->name,
-                'pass' => "BLAH",
-            ]
-        );
-
-        die();
-
         $angelTypes = $this->angelType->get();
         $angelTypesMap = [];
 
@@ -180,7 +168,17 @@ class ImportUsersCotroller extends BaseController
             $usr->personalData->last_name = $u[2];
             $usr->personalData->employee_number = $u[0];
             $usr->personalData->birthday = $u[3];
+            $usr->personalData->shirt_size = 'XL';
+            $usr->personalData->planned_arrival_date = '01-01-1970';
+            $usr->personalData->planned_departure_date = '31-12-3000';
+
             //$bday = date_parse_from_format('j/n/Y', $u[3]);
+
+            $usr->settings->email_human = true;
+            $usr->settings->email_shiftinfo = true;
+            $usr->settings->theme = 1;
+            $usr->settings->language = 'en_US';
+
 
             $angelTypesToAssignIDs = [];
 
@@ -203,6 +201,16 @@ class ImportUsersCotroller extends BaseController
             ]);
 
             $userCount++;
+
+            $this->mail->sendView(
+                $usr->email,
+                'BD-Service Account',
+                'emails/new_account',
+                [
+                    'username' => $this->user->name,
+                    'pass' => $password,
+                ]
+            );
         }
 
         return $this->response->withView(

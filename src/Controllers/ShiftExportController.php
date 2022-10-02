@@ -70,20 +70,34 @@ class ShiftExportController extends BaseController
     public function index(Request $request): Response
     {
         $id = $request->getAttribute('id');
+        $job = $this->shift->findOrFail($id)->get()[0];
         $y = $this->shift->findOrFail($id)->entries()->get();
         $y->load('user.personalData');
+        $y->load('user.contact');
+        $y->load('angelType');
 
-        $this->response->headers->set('Content-Type', 'text/csv');
-        $this->response->headers->set('Content-Description', 'Shift Export');
-        $this->response->headers->set('Content-Disposition', 'attachment; filename=event-' . $id . '.csv');
-        $this->response->headers->set('Content-Transfer-Encoding', 'binary');
-        $this->response->headers->set('Expires', '0');
-        $this->response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
-        $this->response->headers->set('Pragma', 'public');
-        //$this->response->headers->set('Content-Length: ' . filesize($file));
+
+
+        foreach ($y as $s) {
+            $s->age = date_diff(date_create('@' . $job->start), $s->user->personalData->birthday)->format("%y");
+        }
+
+        $this->response->headers->set('Content-Type', 'text/plain');
+        /*
+            $this->response->headers->set('Content-Type', 'text/csv');
+            $this->response->headers->set('Content-Description', 'Shift Export');
+            $this->response->headers->set('Content-Disposition', 'attachment; filename=event-' . $id . '.csv');
+            $this->response->headers->set('Content-Transfer-Encoding', 'binary');
+            $this->response->headers->set('Expires', '0');
+            $this->response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+            $this->response->headers->set('Pragma', 'public');
+         */
         return $this->response->withView(
             'pages/shifts/export.twig',
-            ['sch' => $y]
+            [
+                'sch' => $y,
+                'job' => $job,
+            ]
         );
     }
 }

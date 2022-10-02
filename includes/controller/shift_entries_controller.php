@@ -149,7 +149,7 @@ function shift_entry_create_controller_supporter($shift, $angeltype): array
         $signup_user = User::find($request->input('user_id'));
     }
     if (!UserAngelType_exists($signup_user->id, $angeltype)) {
-        error(__('User is not in angeltype.'));
+        error(__('User is not in user type.'));
         throw_redirect(shift_link($shift));
     }
 

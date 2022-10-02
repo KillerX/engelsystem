@@ -86,7 +86,7 @@ function UserAngelTypes_confirm_all_view($angeltype)
  */
 function UserAngelType_confirm_view($user_angeltype, $user, $angeltype)
 {
-    return page_with_title(__('Confirm angeltype for user'), [
+    return page_with_title(__('Confirm usertype for user'), [
         msg(),
         info(sprintf(
             __('Do you really want to confirm %s for %s?'),
