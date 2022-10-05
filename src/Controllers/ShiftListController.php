@@ -77,11 +77,11 @@ class ShiftListController extends BaseController
         $shifts = $this->shift->with(['neededAngels']);
 
         if ($when == 'history') {
-            $shifts = $shifts ->where('start', '<', time())
-                              ->orderBy('start', 'DESC')
-                              ->limit(100);
+            $shifts = $shifts->where('start', '<', time())
+                             ->orderBy('start', 'DESC')
+                             ->limit(100);
         } else {
-            $shifts = $this->where('start', '>', time())
+            $shifts = $shifts->where('start', '>', time())
                            ->orderBy('start', 'ASC');
         }
 
