@@ -76,9 +76,12 @@ class ShiftExportController extends BaseController
         $y->load('user.contact');
         $y->load('angelType');
 
-
-
         foreach ($y as $s) {
+            if ($s->user->personalData->birthday == "" || $s->user->personalData->birthday == null) {
+                $s->user->personalData->birthday = "1970-01-01";
+                $s->age = -1;
+                continue;
+            }
             $s->age = date_diff(date_create('@' . $job->start), $s->user->personalData->birthday)->format("%y");
         }
 
