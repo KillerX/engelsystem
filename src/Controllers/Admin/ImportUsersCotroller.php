@@ -141,6 +141,7 @@ class ImportUsersCotroller extends BaseController
         }
 
         $userCount = 0;
+        $newUserIDs = [];
 
         foreach ($lines as $l) {
             if ($l == "") {
@@ -183,7 +184,6 @@ class ImportUsersCotroller extends BaseController
             $angelTypesToAssignIDs = [];
 
             $angelTypesToAssign = array_slice($u, 7);
-            print_r($angelTypesToAssign);
             foreach ($angelTypesToAssign as $i => $toAssign) {
                 if (strtolower($toAssign) != 'yes') {
                     continue;
@@ -202,6 +202,8 @@ class ImportUsersCotroller extends BaseController
 
             $userCount++;
 
+            $newUserIDs[] = $usr->id;
+
             $this->mail->sendView(
                 $usr->email,
                 'BD-Service Account',
@@ -212,6 +214,9 @@ class ImportUsersCotroller extends BaseController
                 ]
             );
         }
+
+        // Accept all roles for all new users
+        DB::update(DB::raw("UPDATE UserAngelTypes SET confirm_user_id = 1 WHERE user_id IN (".implode(',', $newUserIDs).");"));
 
         return $this->response->withView(
             'admin/user/import.twig',
