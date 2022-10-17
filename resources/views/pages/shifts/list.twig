@@ -15,9 +15,9 @@
                 <div class="lane">
                     <div class="card-body bg-dark border border-{{ s.border }}">
                         <div class="card-header d-flex align-items-center">
-                            <a class="d-flex align-items-center text-white" href="/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('d.m.Y') }} - {{ s.title }}</h2></a>
+                            <a class="d-flex align-items-center text-white" href="/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('D d.m.Y') }} - {{ s.title }}</h2></a>
                         </div>
-                        {{ s.start|date('D H:i') }} - {{ s.end|date('H:i') }}</br>
+                        {{ s.start|date('H:i') }} - {{ s.end|date('H:i') }}</br>
                         {% if s.description %}
                             <span class="bi bi-info-circle"></span> {{ s.description }}<br>
                         {% endif %}
