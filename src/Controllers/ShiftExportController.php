@@ -85,16 +85,14 @@ class ShiftExportController extends BaseController
             $s->age = date_diff(date_create('@' . $job->start), $s->user->personalData->birthday)->format("%y");
         }
 
-        $this->response->headers->set('Content-Type', 'text/plain');
-        /*
-            $this->response->headers->set('Content-Type', 'text/csv');
-            $this->response->headers->set('Content-Description', 'Shift Export');
-            $this->response->headers->set('Content-Disposition', 'attachment; filename=event-' . $id . '.csv');
-            $this->response->headers->set('Content-Transfer-Encoding', 'binary');
-            $this->response->headers->set('Expires', '0');
-            $this->response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
-            $this->response->headers->set('Pragma', 'public');
-         */
+        $this->response->headers->set('Content-Type', 'text/csv');
+        $this->response->headers->set('Content-Description', 'Shift Export');
+        $this->response->headers->set('Content-Disposition', 'attachment; filename=event-' . $id . '.csv');
+        $this->response->headers->set('Content-Transfer-Encoding', 'binary');
+        $this->response->headers->set('Expires', '0');
+        $this->response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+        $this->response->headers->set('Pragma', 'public');
+
         return $this->response->withView(
             'pages/shifts/export.twig',
             [

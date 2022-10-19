@@ -11,9 +11,9 @@
 #}
 ID,{{ job.SID }}
 Name,{{ job.title }}
-Date,{{ job.start | date('Y-m-d') }}
+Date,{{ job.start | date('d.m.Y') }}
 
 Start,End,Hours,Role,First Name,Last Name,Mobile,Birthday
 {% for s in sch %}
-{{job.start | date('Y-m-d H:i:s')}},{{job.end | date('Y-m-d H:i:s')}},{{ (job.end-job.start)/60/60 }},{{ s.angelType.name }},{{s.user.personalData.first_name}},{{ s.user.personalData.last_name }},{{ s.user.contact.mobile }},{{ s.user.personalData.birthday | date('r') }}
+{{job.start | date('d.m.Y H:i:s')}},{{job.end | date('d.m.Y H:i:s')}},{{ (job.end-job.start)/60/60 }},{{ s.angelType.name }},{{s.user.personalData.first_name}},{{ s.user.personalData.last_name }},{{ s.user.contact.mobile }},{{ s.user.personalData.birthday | date('d.m.Y') }}
 {% endfor %}

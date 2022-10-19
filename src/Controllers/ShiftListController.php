@@ -69,7 +69,6 @@ class ShiftListController extends BaseController
         $this->shift = $shift;
     }
 
-
     public function getData($when)
     {
         $user = $this->auth->user();
@@ -95,10 +94,22 @@ class ShiftListController extends BaseController
 
         if (count($shift_ids) > 0) {
             $shifts_needs = DB::select(DB::raw("
-                SELECT shift_id, angel_type_id, GREATEST(0, count-COALESCE(CNT, 0)) remaining, COALESCE(UserRegistered, 0) user_registered FROM NeededAngelTypes nat
+SELECT shift_id,
+angel_type_id,
+GREATEST(0, count-COALESCE(CNT, 0)) remaining,
+COALESCE(UserRegistered, 0) user_registered,
+c.u users_list
+FROM NeededAngelTypes nat
                 LEFT JOIN
-                    (SELECT SID, TID, COUNT(*) as CNT, SUM(IF(UID = ?, 1, 0)) as UserRegistered FROM ShiftEntry GROUP BY SID, TID) c ON nat.shift_id = c.SID AND nat.angel_type_id = c.TID
-                WHERE shift_id IN (" . implode(',', $shift_ids) . ");
+                    (
+                        SELECT JSON_ARRAYAGG(CONCAT(upd.first_name, ' ', upd.last_name)) as u, upd.user_id, upd.first_name, upd.last_name, SID, TID, COUNT(*) as CNT, SUM(IF(UID = ?, 1, 0)) as UserRegistered FROM ShiftEntry
+                        LEFT JOIN users_personal_data upd ON ShiftEntry.UID = upd.user_id
+                        WHERE SID IN (" . implode(',', $shift_ids) . ")
+                        GROUP BY SID, TID
+                    ) c ON nat.shift_id = c.SID AND nat.angel_type_id = c.TID
+                WHERE shift_id IN (" . implode(',', $shift_ids) . ")
+        GROUP BY shift_id, angel_type_id
+ORDER BY `nat`.`shift_id` ASC;
             "), [$user->id]);
 
             foreach ($shifts as $shift) {
@@ -108,12 +119,16 @@ class ShiftListController extends BaseController
 
                 foreach ($shift->neededAngels as $na) {
                     $na->remaining = 0;
+                    $na->registered_users = "";
                     foreach ($shifts_needs as $sn) {
                         if ($sn->shift_id == $na->shift_id && $sn->angel_type_id == $na->angel_type_id) {
                             $shift->registered |= $sn->user_registered > 0;
                             $na->registered = $sn->user_registered > 0;
                             $na->remaining = $sn->remaining;
                             $shift->remaining += $na->remaining;
+                            if ($sn->users_list != null) {
+                                $na->registered_users = implode(", ", json_decode($sn->users_list));
+                            }
                             break;
                         }
                     }
@@ -144,9 +159,34 @@ class ShiftListController extends BaseController
             'pages/shifts/list.twig',
             [
                 'sch' => $shifts,
+                'mine_only' => false,
                 'admin' => false,
                 'user' => $user,
                 'title' => 'Upcoming jobs',
+            ]
+        );
+    }
+
+    /**
+     * @return Response
+     */
+    public function mine(Request $request): Response
+    {
+        $user = $this->auth->user();
+        if (!$user) {
+            return $this->redirect->to('/');
+        }
+
+        $shifts = $this->getData('upcoming');
+
+        return $this->response->withView(
+            'pages/shifts/list.twig',
+            [
+                'sch' => $shifts,
+                'mine_only' => true,
+                'admin' => false,
+                'user' => $user,
+                'title' => 'My upcoming jobs',
             ]
         );
     }
@@ -167,6 +207,7 @@ class ShiftListController extends BaseController
             'pages/shifts/list.twig',
             [
                 'sch' => $shifts,
+                'mine_only' => false,
                 'admin' => false,
                 'user' => $user,
                 'title' => 'Job history',

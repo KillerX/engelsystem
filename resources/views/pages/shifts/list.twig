@@ -7,38 +7,47 @@
     <div class="container">
         <h1>
             {{ title }}
+            {% if not mine_only %}
+                <a style="float: right" class="btn btn-primary" href="/shifts/mine">My jobs</a>
+            {% else %}
+                <a style="float: right" class="btn btn-primary" href="/shifts/list">All jobs</a>
+            {% endif %}
         </h1>
 
         {% include 'layouts/parts/messages.twig' %}
         {% for s in sch %}
-            <div class="row" style="padding: 10px;">
-                <div class="lane">
-                    <div class="card-body bg-dark border border-{{ s.border }}">
-                        <div class="card-header d-flex align-items-center">
-                            <a class="d-flex align-items-center text-white" href="/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('D d.m.Y') }} - {{ s.title }}</h2></a>
-                        </div>
-                        {{ s.start|date('H:i') }} - {{ s.end|date('H:i') }}</br>
-                        {% if s.description %}
-                            <span class="bi bi-info-circle"></span> {{ s.description }}<br>
-                        {% endif %}
-
-                        <a href="/rooms?action=view&room_id={{s.RID}}"><span class="bi bi-geo-alt"></span> {{ s.room.name }}</a>
-
-                        {% for needed in s.neededAngels %}
-                            {% if needed.count > 0 %}
-                                <div class="col-md-12" style="padding-bottom: 10px;">
-                                    <strong>
-                                        <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1"> {{ needed.count - needed.remaining }}/{{ needed.count }} registered</span>
-                                    {% if needed.remaining > 0 and not s.registered %}
-                                        <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
-                                    {% endif %}
-                                    <br/>
-                                </div>
+            {% if (mine_only and s.registered) or not mine_only %}
+                <div class="row" style="padding: 10px;">
+                    <div class="lane">
+                        <div class="card-body bg-dark border border-{{ s.border }}">
+                            <div class="card-header d-flex align-items-center">
+                                <a class="d-flex align-items-center text-white" href="/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('D d.m.Y') }} - {{ s.title }}</h2></a>
+                            </div>
+                            {{ s.start|date('H:i') }} - {{ s.end|date('H:i') }}</br>
+                            {% if s.description %}
+                                <span class="bi bi-info-circle"></span> {{ s.description }}<br>
                             {% endif %}
-                        {% endfor %}
-                    </div>
+
+                            <a href="/rooms?action=view&room_id={{s.RID}}"><span class="bi bi-geo-alt"></span> {{ s.room.name }}</a>
+
+                            {% for needed in s.neededAngels %}
+                                {% if needed.count > 0 %}
+                                    <div class="col-md-12" style="padding-bottom: 10px;">
+                                        <strong>
+                                            <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1"> {{ needed.count - needed.remaining }}/{{ needed.count }} registered</span>
+                                        {% if needed.remaining > 0 and not s.registered %}
+                                            <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
+                                        {% endif %}
+                                        <div>
+                                            {{ needed.registered_users }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                </div>
             </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}
