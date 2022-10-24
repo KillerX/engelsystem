@@ -200,8 +200,14 @@ class ImportUsersCotroller extends BaseController
                 'group_id' => -20, // Worker
             ]);
 
-            $userCount++;
+            DB::table('users_state')->insert([
+                'user_id' => $usr->id,
+                'arrived' => 1,
+                'arrival_date' => new \DateTimeImmutable(),
+                'active' => 1,
+            ]);
 
+            $userCount++;
             $newUserIDs[] = $usr->id;
 
             $this->mail->sendView(
