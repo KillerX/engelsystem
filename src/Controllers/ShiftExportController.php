@@ -70,7 +70,7 @@ class ShiftExportController extends BaseController
     public function index(Request $request): Response
     {
         $id = $request->getAttribute('id');
-        $job = $this->shift->findOrFail($id)->get()[0];
+        $job = $this->shift->findOrFail($id);
         $y = $this->shift->findOrFail($id)->entries()->get();
         $y->load('user.personalData');
         $y->load('user.contact');
