@@ -102,7 +102,7 @@ c.u users_list
 FROM NeededAngelTypes nat
                 LEFT JOIN
                     (
-                        SELECT JSON_ARRAYAGG(CONCAT(upd.first_name, ' ', upd.last_name)) as u, upd.user_id, upd.first_name, upd.last_name, SID, TID, COUNT(*) as CNT, SUM(IF(UID = ?, 1, 0)) as UserRegistered FROM ShiftEntry
+                        SELECT GROUP_CONCAT(CONCAT(upd.first_name, ' ', upd.last_name)) as u, upd.user_id, upd.first_name, upd.last_name, SID, TID, COUNT(*) as CNT, SUM(IF(UID = ?, 1, 0)) as UserRegistered FROM ShiftEntry
                         LEFT JOIN users_personal_data upd ON ShiftEntry.UID = upd.user_id
                         WHERE SID IN (" . implode(',', $shift_ids) . ")
                         GROUP BY SID, TID
@@ -127,7 +127,7 @@ ORDER BY `nat`.`shift_id` ASC;
                             $na->remaining = $sn->remaining;
                             $shift->remaining += $na->remaining;
                             if ($sn->users_list != null) {
-                                $na->registered_users = implode(", ", json_decode($sn->users_list));
+                                $na->registered_users = $sn->users_list;
                             }
                             break;
                         }
