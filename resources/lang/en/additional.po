@@ -1,0 +1,154 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Engelsystem 2.0\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language: en_US\n"
+
+msgid "auth.not-found"
+msgstr "No user was found or password is wrong. Please try again. If you are still having problems, ask admins."
+
+msgid "validation.password.required"
+msgstr "The password is required."
+
+msgid "validation.login.required"
+msgstr "The login name is required."
+
+msgid "validation.email.required"
+msgstr "The email address is required."
+
+msgid "validation.email.email"
+msgstr "This email address is not valid."
+
+msgid "validation.password.min"
+msgstr "Your new password is too short."
+
+msgid "validation.new_password.min"
+msgstr "Your new password is too short."
+
+msgid "validation.password.confirmed"
+msgstr "Your passwords are not equal."
+
+msgid "validation.password_confirmation.required"
+msgstr "You have to confirm your password."
+
+msgid "schedule.edit.success"
+msgstr "The schedule was configured successfully."
+
+msgid "schedule.import.request-error"
+msgstr "The schedule could not be requested."
+
+msgid "schedule.import.read-error"
+msgstr "Unable to parse schedule."
+
+msgid "schedule.import.invalid-shift-type"
+msgstr "The shift type can't not be found."
+
+msgid "schedule.import.success"
+msgstr "Schedule import successful."
+
+msgid "shifts.filter.toggle"
+msgstr "collapse/show filters"
+
+msgid "validation.schedule-url.required"
+msgstr "The schedule URL is required."
+
+msgid "validation.schedule-url.url"
+msgstr "The schedule URL needs to be of type URL."
+
+msgid "validation.shift-type.required"
+msgstr "The shift type is required."
+
+msgid "validation.shift-type.int"
+msgstr "The shift type has to ba a number."
+
+msgid "validation.minutes-before.int"
+msgstr "The minutes before the talk have to be an integer."
+
+msgid "validation.minutes-after.int"
+msgstr "The minutes after the talk have to be an integer."
+
+msgid "news.comment.success"
+msgstr "Comment saved."
+
+msgid "news.comment-delete.success"
+msgstr "Comment successfully deleted."
+
+msgid "news.edit.success"
+msgstr "News successfully updated."
+
+msgid "news.delete.success"
+msgstr "News successfully deleted."
+
+msgid "oauth.invalid-state"
+msgstr "Invalid OAuth state"
+
+msgid "oauth.provider-error"
+msgstr "OAuth provider error"
+
+msgid "oauth.already-connected"
+msgstr "This account is already connected to another account!"
+
+msgid "oauth.connected"
+msgstr "Connected login provider!"
+
+msgid "oauth.disconnected"
+msgstr "Disconnected login provider!"
+
+msgid "oauth.not-found"
+msgstr "Unable to find account"
+
+msgid "oauth.provider-not-found"
+msgstr "Unable to find OAuth provider"
+
+msgid "settings.profile"
+msgstr "Profile"
+
+msgid "faq.delete.success"
+msgstr "FAQ entry successfully deleted."
+
+msgid "faq.edit.success"
+msgstr "FAQ entry successfully updated."
+
+msgid "question.delete.success"
+msgstr "Question deleted successfully."
+
+msgid "question.add.success"
+msgstr "Question added successfully."
+
+msgid "question.edit.success"
+msgstr "Question updated successfully."
+
+msgid "notification.news.new"
+msgstr "New news: %s"
+
+msgid "notification.news.new.introduction"
+msgstr "A new news is available: %1$s"
+
+msgid "notification.news.new.text"
+msgstr "You can watch it at %3$s"
+
+msgid "notification.angeltype.confirmed"
+msgstr "You have been confirmed as an %s"
+
+msgid "notification.angeltype.confirmed.introduction"
+msgstr "You have been confirmed as an %1$s by a supporter."
+
+msgid "notification.angeltype.confirmed.text"
+msgstr "You can find a description at %2$s"
+
+msgid "notification.angeltype.added"
+msgstr "You have been added as an %s"
+
+msgid "notification.angeltype.added.introduction"
+msgstr "You have been added as an %1$s by a supporter."
+
+msgid "notification.angeltype.added.text"
+msgstr "You can find a description at %2$s"
+
+msgid "user.edit.success"
+msgstr "User edited successfully."
