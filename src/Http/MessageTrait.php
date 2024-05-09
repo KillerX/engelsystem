@@ -4,6 +4,7 @@ namespace Engelsystem\Http;
 
 use Nyholm\Psr7\Stream;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\MessageInterface;
 
 /**
  * @implements \Psr\Http\Message\MessageInterface
@@ -36,7 +37,7 @@ trait MessageTrait
      * @param string $version HTTP protocol version
      * @return static
      */
-    public function withProtocolVersion($version)
+    public function withProtocolVersion(string $version): MessageInterface
     {
         $new = clone $this;
         if (method_exists($new, 'setProtocolVersion')) {
@@ -73,7 +74,7 @@ trait MessageTrait
      *     key MUST be a header name, and each value MUST be an array of strings
      *     for that header.
      */
-    public function getHeaders()
+    public function getHeaders() : array
     {
         if (method_exists($this->headers, 'allPreserveCase')) {
             return $this->headers->allPreserveCase();
@@ -90,7 +91,7 @@ trait MessageTrait
      *                     name using a case-insensitive string comparison. Returns false if
      *                     no matching header name is found in the message.
      */
-    public function hasHeader($name)
+    public function hasHeader($name) : bool
     {
         return $this->headers->has($name);
     }
@@ -109,7 +110,7 @@ trait MessageTrait
      *                     header. If the header does not appear in the message, this method MUST
      *                     return an empty array.
      */
-    public function getHeader($name)
+    public function getHeader($name) : array
     {
         return $this->headers->all($name);
     }
@@ -133,7 +134,7 @@ trait MessageTrait
      *                     concatenated together using a comma. If the header does not appear in
      *                     the message, this method MUST return an empty string.
      */
-    public function getHeaderLine($name)
+    public function getHeaderLine($name) : string
     {
         return implode(',', $this->getHeader($name));
     }
@@ -153,7 +154,7 @@ trait MessageTrait
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withHeader($name, $value)
+    public function withHeader($name, $value) : MessageInterface
     {
         $new = clone $this;
         $new->headers->set($name, $value);
@@ -177,7 +178,7 @@ trait MessageTrait
      * @return static
      * @throws \InvalidArgumentException for invalid header names or values.
      */
-    public function withAddedHeader($name, $value)
+    public function withAddedHeader($name, $value) : MessageInterface
     {
         $new = clone $this;
         $new->headers->set($name, $value, false);
@@ -197,7 +198,7 @@ trait MessageTrait
      * @param string $name Case-insensitive header field name to remove.
      * @return static
      */
-    public function withoutHeader($name)
+    public function withoutHeader($name) : MessageInterface
     {
         $new = clone $this;
         $new->headers->remove($name);
@@ -210,7 +211,7 @@ trait MessageTrait
      *
      * @return StreamInterface Returns the body as a stream.
      */
-    public function getBody()
+    public function getBody() : StreamInterface
     {
         $stream = Stream::create($this->getContent());
         $stream->rewind();
@@ -231,7 +232,7 @@ trait MessageTrait
      * @return static
      * @throws \InvalidArgumentException When the body is not valid.
      */
-    public function withBody(StreamInterface $body)
+    public function withBody(StreamInterface $body) : MessageInterface
     {
         $new = clone $this;
 

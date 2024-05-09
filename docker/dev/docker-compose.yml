@@ -20,10 +20,7 @@ services:
       APP_NAME: Engelsystem DEV
     env_file: deployment.env
     ports:
-      - "5000:80"
-    networks:
-      - database
-      - internet
+      - "127.0.0.1:5080:80"
     depends_on:
       - es_database
   es_workspace:
@@ -41,33 +38,31 @@ services:
       MYSQL_USER: engelsystem
       MYSQL_PASSWORD: engelsystem
       MYSQL_DATABASE: engelsystem
-      ENVIRONMENT: development
+      ENVIRONMENT: production
       MAIL_DRIVER: log
       APP_NAME: Engelsystem DEV
-    networks:
-      - database
-      - internet
     depends_on:
       - es_database
+  es_phpmyadmin:
+    image: phpmyadmin
+    environment:
+      PMA_HOST: es_database
+    ports:
+      - "127.0.0.1:8888:80"
+    depends_on:
+      - es_database
+    profiles: [ dev ]
   es_database:
-    image: mariadb:10.9
+    image: mariadb:10.9.8
+    ports:
+      - "127.0.0.1:3306:3306"
     environment:
       MYSQL_DATABASE: engelsystem
       MYSQL_USER: engelsystem
       MYSQL_PASSWORD: engelsystem
       MYSQL_RANDOM_ROOT_PASSWORD: 1
       MYSQL_INITDB_SKIP_TZINFO: "yes"
-    ports:
-      - "3306:3306"
     volumes:
       - db:/var/lib/mysql
-    networks:
-      - database
-      - internet
 volumes:
   db: {}
-
-networks:
-  database:
-    internal: true
-  internet:

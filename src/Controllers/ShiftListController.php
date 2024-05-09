@@ -40,6 +40,8 @@ class ShiftListController extends BaseController
         'export' => 'shifts_admin',
     ];
 
+    protected $redirect;
+
     /**
      * @param Authenticator   $auth
      * @param Config          $config
