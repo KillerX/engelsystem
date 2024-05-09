@@ -26,7 +26,6 @@ COPY config/ /app/config
 COPY db/ /app/db
 COPY includes/ /app/includes
 COPY public/ /app/public
-COPY resources/api /app/resources/api
 COPY resources/views /app/resources/views
 COPY src/ /app/src
 COPY storage/ /app/storage
@@ -39,7 +38,7 @@ COPY --from=themes /app/public/assets /app/public/assets/
 RUN find /app/storage/ -type f -not -name VERSION -exec rm {} \;
 
 # Build the PHP/Nginx container
-FROM php:8.2-fpm-alpine
+FROM php:8.1-fpm-alpine
 WORKDIR /var/www
 RUN apk add --no-cache icu-dev nginx && \
     docker-php-ext-install intl pdo_mysql && \
