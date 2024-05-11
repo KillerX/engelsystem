@@ -47,23 +47,24 @@ class ImportUsersCotroller extends BaseController
 
     /**
      * @param LoggerInterface $log
-     * @param Faq             $faq
-     * @param Redirector      $redirector
-     * @param Response        $response
-     * @param User            $user
-     * @param AngelType       $angelType
+     * @param Faq $faq
+     * @param Redirector $redirector
+     * @param Response $response
+     * @param User $user
+     * @param AngelType $angelType
      * @param EngelsystemMailer $mail
      */
     public function __construct(
-        LoggerInterface $log,
-        Faq $faq,
-        Redirector $redirector,
-        Response $response,
-        User $user,
-        AngelType $angelType,
+        LoggerInterface   $log,
+        Faq               $faq,
+        Redirector        $redirector,
+        Response          $response,
+        User              $user,
+        AngelType         $angelType,
         EngelsystemMailer $mail,
-        Authenticator $auth,
-    ) {
+        Authenticator     $auth,
+    )
+    {
         $this->log = $log;
         $this->faq = $faq;
         $this->redirect = $redirector;
@@ -96,10 +97,13 @@ class ImportUsersCotroller extends BaseController
         return $this->response->withView(
             'admin/user/import.twig',
             [
+                'created' => false,
                 'userCount' => '',
+                'angelTypes' => $this->angelType->get(),
             ]
         );
     }
+
 
     /**
      * @param Request $request
@@ -113,7 +117,9 @@ class ImportUsersCotroller extends BaseController
             return $this->response->withView(
                 'admin/user/import.twig',
                 [
+                    'created' => false,
                     'userCount' => '',
+                    'angelTypes' => $this->angelType->get(),
                 ]
             );
         }
@@ -228,6 +234,8 @@ class ImportUsersCotroller extends BaseController
             'admin/user/import.twig',
             [
                 'userCount' => $userCount,
+                'created' => true,
+                'angelTypes' => $this->angelType->get(),
             ]
         );
     }

@@ -118,6 +118,8 @@ $route->addGroup(
             function (RouteCollector $route) {
                 $route->get('/import', 'Admin\\ImportUsersCotroller@index');
                 $route->post('/import', 'Admin\\ImportUsersCotroller@process');
+                $route->get('/new', 'Admin\\CreateUserController@index');
+                $route->post('/new', 'Admin\\CreateUserController@process');
             }
         );
 

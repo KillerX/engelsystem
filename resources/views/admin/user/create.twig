@@ -1,0 +1,38 @@
+{% extends "layouts/app.twig" %}
+{% import 'macros/base.twig' as m %}
+{% import 'macros/form.twig' as f %}
+
+{% block title %}Create User{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ block('title') }}</h1>
+
+        {%  if created %}
+            <h2>User created!</h2>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {{ csrf() }}
+            <input type="hidden" name="formimport" value="1" />
+            <div class="row">
+                <div class="col-md-6">
+                    {{ f.input("employee_number", "Ansattnummer", "text") }}
+                    {{ f.input("first_name", "Fornavn", "text") }}
+                    {{ f.input("last_name", "Etternavn", "text") }}
+                    {{ f.input("date_of_birth", "Født", "date") }}
+                    {{ f.input("email", "E-postadresse", "email") }}
+                    {{ f.input("phone", "Telefonnummer", "text") }}
+                </div>
+                    <div class="col-md-6">
+                        {% for at in angelTypes %}
+                            {{ f.checkbox(at.id, at.name) }}
+                        {% endfor %}
+                </div>
+                <div class="col-md-12">
+                    {{ f.submit(__('form.save')) }}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
