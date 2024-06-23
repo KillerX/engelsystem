@@ -56,6 +56,10 @@ $route->get('/api[/{resource:.+}]', 'ApiController@index');
 // Design
 $route->get('/design', 'DesignController@index');
 
+// Register new user
+$route->get('/register', 'Admin\\CreateUserController@index');
+$route->post('/register', 'Admin\\CreateUserController@process');
+
 // Shifts
 $route->get('/export_shift/{id:\d+}', 'ShiftExportController@index');
 $route->get('/shifts/list', 'ShiftListController@index');
