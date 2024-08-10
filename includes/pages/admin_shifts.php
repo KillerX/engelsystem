@@ -429,7 +429,6 @@ function admin_shifts()
         form([
             div('row',[
                 div('col-md-6', [
-                    print_r($shifttypes, true),
                     form_hidden('shifttype_id', array_key_first($shifttypes)),
                     //form_select('shifttype_id', __('Job Type'), $shifttypes, $shifttype_id),
                     form_text('title', __('Title'), $title),
@@ -444,7 +443,9 @@ function admin_shifts()
                 div('col-md-6', [
                     form_datetime('start', __('Start'), $start),
                     form_datetime('end', __('End'), $end),
-                    form_info(__('Mode'), ''),
+                    form_hidden('mode',  'single'),
+                    /*
+                    //form_info(__('Mode'), ''),
                     form_radio('mode', __('Create one shift'), $mode == 'single', 'single'),
                     form_radio('mode', __('Create multiple shifts'), $mode == 'multi', 'multi'),
                     form_text(
@@ -471,7 +472,7 @@ function admin_shifts()
                         'shift_over_midnight',
                         __('Create a shift over midnight.'),
                         $shift_over_midnight
-                    )
+                    )*/
                 ]),
                 div('col-md-6', [
                     form_info(__('Needed workers'), ''),
