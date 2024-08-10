@@ -164,7 +164,7 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
         $buttons = [
             $shift_admin ? button(shift_edit_link($shift), icon('pencil') . __('edit')) : '',
             $shift_admin ? button(shift_delete_link($shift), icon('trash') . __('delete')) : '',
-            $admin_shifttypes ? button(shifttype_link($shifttype), $shifttype['name']) : '',
+            //$admin_shifttypes ? button(shifttype_link($shifttype), $shifttype['name']) : '',
             $admin_rooms ? button(room_link($room), icon('geo-alt') . $room->name) : '',
             $shift_admin ? button("/export_shift/" . $shift["SID"], icon('file-earmark-excel') . "Export") : '',
         ];
@@ -190,7 +190,7 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
     }
 
     return page_with_title(
-        $shift['name'] . ' <small class="moment-countdown" data-timestamp="' . $shift['start'] . '">%c</small>',
+        $shift['title'] . ' <small class="moment-countdown" data-timestamp="' . $shift['start'] . '">%c</small>',
         $content
     );
 }
