@@ -85,6 +85,8 @@ class ShiftExportController extends BaseController
             $s->age = date_diff(date_create('@' . $job->start), $s->user->personalData->birthday)->format("%y");
         }
 
+
+
         $this->response->headers->set('Content-Type', 'text/csv');
         $this->response->headers->set('Content-Description', 'Shift Export');
         $this->response->headers->set('Content-Disposition', 'attachment; filename=event-' . $id . '.csv');
