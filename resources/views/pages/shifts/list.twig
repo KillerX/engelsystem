@@ -44,6 +44,19 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
+
+                            {% if s.responsible_name %}
+                                Ansvarlig: {{ s.responsible_name }}</br>
+                                {% if s.responsible_phone %} (<a href="tel:{{ s.responsible_phone }}">{{ s.responsible_phone }}</a>)</br>
+                                {% endif %}
+                            {% endif %}
+                            {% if s.address %}
+                                Adresse: <a href="https://www.google.com/maps/search/?api=1&query={{ s.address }}">{{ s.address }}</a></br>
+                            {% endif %}
+                            {% if s.requirements %}
+                                {{ s.requirements }}</br>
+                            {% endif %}
+
                         </div>
                 </div>
             </div>

@@ -20,6 +20,10 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property int                                          $minutes_after
  * @property Carbon                                       $created_at
  * @property Carbon                                       $updated_at
+ * @property string                                       $responsible_name
+ * @property string                                       $responsible_phone
+ * @property string                                       $address
+ * @property string                                       $requirements
  *
  * @property-read QueryBuilder|Collection|ScheduleShift[] $scheduleShifts
  *

@@ -573,11 +573,15 @@ function Shift_create($shift)
             `title`,
             `description`,
             `URL`,
+            `responsible_name`,
+            `responsible_phone`,
+            `address`,
+            `requirements`,
             `created_by_user_id`,
             `edited_at_timestamp`,
             `created_at_timestamp`
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ',
         [
             $shift['shifttype_id'],
@@ -587,6 +591,10 @@ function Shift_create($shift)
             $shift['title'],
             $shift['description'],
             $shift['URL'],
+            $shift['responsible_name'],
+            $shift['responsible_phone'],
+            $shift['address'],
+            $shift['requirements'],
             auth()->user()->id,
             time(),
             time(),

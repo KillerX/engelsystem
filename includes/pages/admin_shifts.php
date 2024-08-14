@@ -29,6 +29,10 @@ function admin_shifts()
     $length = '';
     $change_hours = [];
     $title = '';
+    $responsible_name = '';
+    $responsible_phone = '';
+    $address = '';
+    $requirements = '';
     $shifttype_id = null;
     $description = null;
     // When true: creates a shift beginning at the last shift change hour and ending at the first shift change hour
@@ -71,6 +75,11 @@ function admin_shifts()
 
         // Name/Bezeichnung der Schicht, darf leer sein
         $title = strip_request_item('title');
+
+        $responsible_name = strip_request_item('responsible_name');
+        $responsible_phone = strip_request_item('responsible_phone');
+        $address = strip_request_item('address');
+        $requirements = strip_request_item('requirements');
 
         // Beschreibung der Schicht, darf leer sein
         $description = strip_request_item_nl('description');
@@ -201,6 +210,10 @@ function admin_shifts()
                     'title'        => $title,
                     'shifttype_id' => $shifttype_id,
                     'description'  => $description,
+                    'responsible_name' => $responsible_name,
+                    'responsible_phone' => $responsible_phone,
+                    'address' => $address,
+                    'requirements' => $requirements
                 ];
             } elseif ($mode == 'multi') {
                 $shift_start = (int) $start;
@@ -221,6 +234,10 @@ function admin_shifts()
                         'title'        => $title,
                         'shifttype_id' => $shifttype_id,
                         'description'  => $description,
+                        'responsible_name' => $responsible_name,
+                        'responsible_phone' => $responsible_phone,
+                        'address' => $address,
+                        'requirements' => $requirements
                     ];
 
                     $shift_start = $shift_end;
@@ -287,7 +304,11 @@ function admin_shifts()
                             'RID'          => $rid,
                             'title'        => $title,
                             'shifttype_id' => $shifttype_id,
-                            'description'  => $description
+                            'description'  => $description,
+                            'responsible_name' => $responsible_name,
+                            'responsible_phone' => $responsible_phone,
+                            'address' => $address,
+                            'requirements' => $requirements
                         ];
                     }
 
@@ -433,18 +454,26 @@ function admin_shifts()
                     //form_select('shifttype_id', __('Job Type'), $shifttypes, $shifttype_id),
                     form_text('title', __('Title'), $title),
                     form_select('rid', __('Location'), $room_array, $rid),
-                ]),
-                div('col-md-6', [
-                    form_textarea('description', __('Additional description'), $description),
-                    __('This description is for single shifts, otherwise please use the description in shift type.'),
-                ]),
-            ]),
-            div('row', [
-                div('col-md-6', [
                     form_datetime('start', __('Start'), $start),
                     form_datetime('end', __('End'), $end),
+                    form_textarea('description', __('Additional description'), $description),
+                    __('This description is for single shifts, otherwise please use the description in shift type.'),
                     form_hidden('mode',  'single'),
+                ]),
+                div('col-md-6', [
+                    form_text('responsible_name', __('Ansvarlig'), $responsible_name),
+                    form_text('responsible_phone', __('Ansvarlig Telefon'), $responsible_phone),
+                    form_text('address', __('Adresse'), $address),
+                    form_text('requirements', __('Bekledning/Nødvendig utstyr'), $requirements),
+                    form_info(__('Needed workers'), ''),
+                    form_hidden('angelmode',  'manually'),
+                    div('row', [
+                        $angel_types
+                    ])
+                ]),
+            ]),
                     /*
+                    // This is the old code for generating multiple shifts
                     //form_info(__('Mode'), ''),
                     form_radio('mode', __('Create one shift'), $mode == 'single', 'single'),
                     form_radio('mode', __('Create multiple shifts'), $mode == 'multi', 'multi'),
@@ -473,26 +502,6 @@ function admin_shifts()
                         __('Create a shift over midnight.'),
                         $shift_over_midnight
                     )*/
-                ]),
-                div('col-md-6', [
-                    form_info(__('Needed workers'), ''),
-                    form_radio(
-                        'angelmode',
-                        __('Take needed workers from location settings'),
-                        $angelmode == 'location',
-                        'location'
-                    ),
-                    form_radio(
-                        'angelmode',
-                        __('The following workers are needed'),
-                        $angelmode == 'manually',
-                        'manually'
-                    ),
-                    div('row', [
-                        $angel_types
-                    ])
-                ])
-            ]),
             form_submit('preview', icon('search') . __('Preview'))
         ])
     ]);
