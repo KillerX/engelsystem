@@ -537,6 +537,10 @@ function Shift_update($shift)
         `title` = ?,
         `description` = ?,
         `URL` = ?,
+        `responsible_name` = ?,
+        `responsible_phone` = ?,
+        `address` = ?,
+        `requirements` = ?,
         `edited_by_user_id` = ?,
         `edited_at_timestamp` = ?
         WHERE `SID` = ?
@@ -549,6 +553,10 @@ function Shift_update($shift)
             $shift['title'],
             $shift['description'],
             $shift['URL'],
+            $shift['responsible_name'],
+            $shift['responsible_phone'],
+            $shift['address'],
+            $shift['requirements'],
             $user->id,
             time(),
             $shift['SID']

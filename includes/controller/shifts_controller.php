@@ -159,6 +159,10 @@ function shift_edit_controller()
             $shift['RID'] = $rid;
             $shift['start'] = $start;
             $shift['end'] = $end;
+            $shift['responsible_name'] = $request->input('responsible_name');
+            $shift['responsible_phone'] = $request->input('responsible_phone');
+            $shift['address'] = $request->input('address');
+            $shift['requirements'] = $request->input('requirements');
 
             Shift_update($shift);
             NeededAngelTypes_delete_by_shift($shift_id);
@@ -204,6 +208,10 @@ function shift_edit_controller()
                 form_select('rid', __('Location:'), $rooms, $rid),
                 form_text('start', __('Start:'), date('Y-m-d H:i', $start)),
                 form_text('end', __('End:'), date('Y-m-d H:i', $end)),
+                form_text('responsible_name', __('Responsible name'), $shift['responsible_name']),
+                form_text('responsible_phone', __('Responsible phone'), $shift['responsible_phone']),
+                form_text('address', __('Address'), $shift['address']),
+                form_textarea('requirements', __('Requirements'), $shift['requirements']),
                 form_textarea('description', __('Additional description'), $description),
                 form_info('', __('This description is for single shifts, otherwise please use the description in job type.')),
                 '<h2>' . __('Needed workers') . '</h2>',

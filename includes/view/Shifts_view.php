@@ -39,10 +39,16 @@ function Shift_view_header($shift, Room $room)
             icon('clock') . date('H:i', $shift['end']),
             '</p>'
         ]),
-        div('col-sm-3 col-xs-6', [
-            '<h4>' . __('Location') . '</h4>',
-            '<p class="lead">' . Room_name_render($room) . '</p>'
-        ])
+
+        ($shift['address']) ?
+            div('col-sm-3 col-xs-6', [
+                '<h4>' . __('Address') . '</h4>',
+                '<p class="lead"> <a href="https://www.google.com/maps/search/?api=1&query='.$shift['address'].'">' . $shift['address'] . '</a></p>'
+            ]) :
+            div('col-sm-3 col-xs-6', [
+                '<h4>' . __('Location') . '</h4>',
+                '<p class="lead">' . Room_name_render($room) . '</p>'
+            ]),
     ]);
 }
 
@@ -165,7 +171,7 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
             $shift_admin ? button(shift_edit_link($shift), icon('pencil') . __('edit')) : '',
             $shift_admin ? button(shift_delete_link($shift), icon('trash') . __('delete')) : '',
             //$admin_shifttypes ? button(shifttype_link($shifttype), $shifttype['name']) : '',
-            $admin_rooms ? button(room_link($room), icon('geo-alt') . $room->name) : '',
+            //$admin_rooms ? button(room_link($room), icon('geo-alt') . $room->name) : '',
             $shift_admin ? button("/export_shift/" . $shift["SID"], icon('file-earmark-excel') . "Export") : '',
         ];
     }
@@ -173,6 +179,17 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
     $content[] = buttons($buttons);
 
     $content[] = Shift_view_header($shift, $room);
+
+    $content[] = div('row', [
+        div('col-sm-6', [
+            $shift['requirements'] ? '<h2>' . __('Bekledning/Nødvendig utstyr') . '</h2>' . $parsedown->parse((string)$shift['requirements']) : '',
+        ]),
+        div('col-sm-6', [
+            $shift['responsible_name'] ? '<h2>' . __('Ansvarlig') . '</h2>' . $parsedown->parse((string)$shift['responsible_name']) : '',
+            $shift['responsible_phone'] ? 'Telefon: <a href="tel:'. $shift['responsible_phone'] . '">' . $shift['responsible_phone'] . '</a>' : '',
+        ]),
+    ]);
+
     $content[] = div('row', [
         div('col-sm-6', [
             '<h2>' . __('Needed workers') . '</h2>',
