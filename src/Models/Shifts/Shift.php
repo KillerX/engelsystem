@@ -24,6 +24,8 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property string                                       $responsible_phone
  * @property string                                       $address
  * @property string                                       $requirements
+ * @property int                                          $min_age
+ * @property int                                          $max_age
  *
  * @property-read QueryBuilder|Collection|ScheduleShift[] $scheduleShifts
  *
@@ -45,7 +47,6 @@ class Shift extends BaseModel
      */
     protected $table = 'Shifts';
 
-
     /**
      * The primary key associated with the table.
      *
@@ -66,5 +67,11 @@ class Shift extends BaseModel
     public function room()
     {
         return $this->hasOne(Room::class, 'id', 'RID');
+    }
+
+    public function canRegister($birthday)
+    {
+        $userAge = $birthday->diffInYears(Carbon::createFromTimestamp($this->start));
+        return $userAge >= $this->min_age && $userAge <= $this->max_age;
     }
 }

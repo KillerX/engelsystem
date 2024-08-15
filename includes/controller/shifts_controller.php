@@ -91,6 +91,8 @@ function shift_edit_controller()
     $rid = $shift['RID'];
     $start = $shift['start'];
     $end = $shift['end'];
+    $min_age = $shift['min_age'];
+    $max_age = $shift['max_age'];
 
     if ($request->hasPostData('submit')) {
         // Name/Bezeichnung der Schicht, darf leer sein
@@ -163,6 +165,8 @@ function shift_edit_controller()
             $shift['responsible_phone'] = $request->input('responsible_phone');
             $shift['address'] = $request->input('address');
             $shift['requirements'] = $request->input('requirements');
+            $shift['min_age'] = $request->input('min_age');
+            $shift['max_age'] = $request->input('max_age');
 
             Shift_update($shift);
             NeededAngelTypes_delete_by_shift($shift_id);
@@ -213,6 +217,8 @@ function shift_edit_controller()
                 form_text('address', __('Address'), $shift['address']),
                 form_textarea('requirements', __('Requirements'), $shift['requirements']),
                 form_textarea('description', __('Additional description'), $description),
+                form_number('min_age', __('Minimum age'), $min_age, false, 0, 999),
+                form_number('max_age', __('Maximum age'), $max_age, false, 0, 999),
                 form_info('', __('This description is for single shifts, otherwise please use the description in job type.')),
                 '<h2>' . __('Needed workers') . '</h2>',
                 $angel_types_spinner,

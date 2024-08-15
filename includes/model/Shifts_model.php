@@ -542,7 +542,9 @@ function Shift_update($shift)
         `address` = ?,
         `requirements` = ?,
         `edited_by_user_id` = ?,
-        `edited_at_timestamp` = ?
+        `edited_at_timestamp` = ?,
+        `min_age` = ?,
+        `max_age` = ?
         WHERE `SID` = ?
     ',
         [
@@ -559,6 +561,8 @@ function Shift_update($shift)
             $shift['requirements'],
             $user->id,
             time(),
+            $shift['min_age'],
+            $shift['max_age'],
             $shift['SID']
         ]
     );
@@ -585,11 +589,13 @@ function Shift_create($shift)
             `responsible_phone`,
             `address`,
             `requirements`,
+            `min_age`,
+            `max_age`,
             `created_by_user_id`,
             `edited_at_timestamp`,
             `created_at_timestamp`
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ',
         [
             $shift['shifttype_id'],
@@ -603,6 +609,8 @@ function Shift_create($shift)
             $shift['responsible_phone'],
             $shift['address'],
             $shift['requirements'],
+            $shift['min_age'],
+            $shift['max_age'],
             auth()->user()->id,
             time(),
             time(),
