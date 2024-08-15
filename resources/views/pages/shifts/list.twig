@@ -23,21 +23,24 @@
                             <div class="card-header d-flex align-items-center">
                                 <a class="d-flex align-items-center text-white" href="/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('D d.m.Y') }} - {{ s.title }}</h2></a>
                             </div>
-                            {{ s.start|date('H:i') }} - {{ s.end|date('H:i') }}</br>
+                            {{ s.start|date('H:i') }} - {{ s.end|date('H:i') }}<br/>
 
                             {% if s.responsible_name %}
-                                Ansvarlig: {{ s.responsible_name }} {% if s.responsible_phone %} Tlf: (<a href="tel:{{ s.responsible_phone }}">{{ s.responsible_phone }}</a>)</br>
+                                Ansvarlig: {{ s.responsible_name }} {% if s.responsible_phone %} Tlf: (<a href="tel:{{ s.responsible_phone }}">{{ s.responsible_phone }}</a>)<br/>
                                 {% endif %}
                             {% endif %}
                             {% if s.address %}
-                                Addresse: <a href="https://www.google.com/maps/search/?api=1&query={{ s.address }}">{{ s.address }}</a></br>
+                                Addresse: <a href="https://www.google.com/maps/search/?api=1&query={{ s.address }}">{{ s.address }}</a><br/>
                             {% else %}
-                                <a href="/rooms?action=view&room_id={{s.RID}}"><span class="bi bi-geo-alt"></span> {{ s.room.name }}</a>
+                            <a href="/rooms?action=view&room_id={{s.RID}}"><span class="bi bi-geo-alt"></span> {{ s.room.name }}</a><br/>
                             {% endif %}
                             {% if s.requirements %}
-                                Bekledning/Nødvendig utstyr: {{ s.requirements }}<br>
+                                Bekledning/Nødvendig utstyr: {{ s.requirements }}<br/>
                             {% endif %}
-<br />
+
+                            {% if s.min_age > 13 or s.max_age < 100 %}
+                                Alder: {{ s.min_age }} - {{ s.max_age }}<br/>
+                            {% endif %}
 
                             {% if s.description %}
                                 <span class="bi bi-info-circle"></span> {{ s.description }}<br>
@@ -48,7 +51,7 @@
                                     <div class="col-md-12" style="padding-bottom: 10px;">
                                         <strong>
                                             <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1"> {{ needed.count - needed.remaining }}/{{ needed.count }} registered</span>
-                                        {% if needed.remaining > 0 and not s.registered %}
+                                        {% if needed.remaining > 0 and not s.registered and s.canRegister(user.personalData.birthday) %}
                                             <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
                                         {% endif %}
                                         <div>

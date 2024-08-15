@@ -35,6 +35,9 @@ function admin_shifts()
     $requirements = '';
     $shifttype_id = null;
     $description = null;
+    $min_age = 13;
+    $max_age = 120;
+
     // When true: creates a shift beginning at the last shift change hour and ending at the first shift change hour
     $shift_over_midnight = true;
 
@@ -114,6 +117,25 @@ function admin_shifts()
         if ($start >= $end) {
             $valid = false;
             error(__('The shifts end has to be after its start.'));
+        }
+
+        if ($request->has('min_age') && preg_match('/^\d+$/', trim($request->input('min_age')))) {
+            $min_age = trim($request->input('min_age'));
+        } else {
+            $valid = false;
+            error(__('Please enter a minimum age.'));
+        }
+
+        if ($request->has('max_age') && preg_match('/^\d+$/', trim($request->input('max_age')))) {
+            $max_age = trim($request->input('max_age'));
+        } else {
+            $valid = false;
+            error(__('Please enter a maximum age.'));
+        }
+
+        if ($min_age > $max_age) {
+            $valid = false;
+            error(__('The minimum age has to be lower than the maximum age.'));
         }
 
         if ($request->has('mode')) {
@@ -213,7 +235,9 @@ function admin_shifts()
                     'responsible_name' => $responsible_name,
                     'responsible_phone' => $responsible_phone,
                     'address' => $address,
-                    'requirements' => $requirements
+                    'requirements' => $requirements,
+                    'min_age' => $min_age,
+                    'max_age' => $max_age
                 ];
             } elseif ($mode == 'multi') {
                 $shift_start = (int) $start;
@@ -237,7 +261,9 @@ function admin_shifts()
                         'responsible_name' => $responsible_name,
                         'responsible_phone' => $responsible_phone,
                         'address' => $address,
-                        'requirements' => $requirements
+                        'requirements' => $requirements,
+                        'min_age' => $min_age,
+                        'max_age' => $max_age
                     ];
 
                     $shift_start = $shift_end;
@@ -453,7 +479,7 @@ function admin_shifts()
                     form_hidden('shifttype_id', array_key_first($shifttypes)),
                     //form_select('shifttype_id', __('Job Type'), $shifttypes, $shifttype_id),
                     form_text('title', __('Title'), $title),
-                    form_select('rid', __('Location'), $room_array, $rid),
+                    form_hidden('rid', array_key_first($room_array)),
                     form_datetime('start', __('Start'), $start),
                     form_datetime('end', __('End'), $end),
                     form_textarea('description', __('Additional description'), $description),
@@ -465,6 +491,8 @@ function admin_shifts()
                     form_text('responsible_phone', __('Ansvarlig Telefon'), $responsible_phone),
                     form_text('address', __('Adresse'), $address),
                     form_text('requirements', __('Bekledning/Nødvendig utstyr'), $requirements),
+                    form_number('min_age', __('Min age'), $min_age, false, 0, 99),
+                    form_number('max_age', __('Max age'), $max_age, false, 0, 99),
                     form_info(__('Needed workers'), ''),
                     form_hidden('angelmode',  'manually'),
                     div('row', [

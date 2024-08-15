@@ -274,6 +274,33 @@ function form_text($name, $label, $value, $disabled = false, $maxlength = null, 
 }
 
 /**
+ * Rendert ein Formular-Textfeld begrentz auf zahlen
+ *
+ * @param string      $name
+ * @param string      $label
+ * @param string      $value
+ * @param bool        $disabled
+ * @param int|null    $min
+ * @param int|null    $max
+ *
+ * @return string
+ */
+function form_number($name, $label, $value, $disabled = false, $min = null, $max = null,  $class = '')
+{
+    $disabled = $disabled ? ' disabled="disabled"' : '';
+    $min = $min ? ' min=' . (int)$min : '';
+    $max = $max ? ' max=' . (int)$max : '';
+
+    return form_element(
+        $label,
+        '<input class="form-control" id="form_' . $name . '" type="number" name="' . $name
+        . '" value="' . htmlspecialchars((string)$value) . '"' . $min . $disabled . $max. '/>',
+        'form_' . $name,
+        $class
+    );
+}
+
+/**
  * Renders a text input with placeholder instead of label.
  *
  * @param String  $name        Input name

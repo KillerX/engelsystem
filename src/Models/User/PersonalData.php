@@ -13,6 +13,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property string|null $shirt_size
  * @property Carbon|null $planned_arrival_date
  * @property Carbon|null $planned_departure_date
+ * @property Carbon|null $birthday
  *
  * @method static QueryBuilder|PersonalData[] whereFirstName($value)
  * @method static QueryBuilder|PersonalData[] whereLastName($value)
