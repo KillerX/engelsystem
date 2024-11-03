@@ -18,6 +18,8 @@ services:
       ENVIRONMENT: development
       MAIL_DRIVER: log
       APP_NAME: Engelsystem DEV
+      MAIL_TELEGRAM_BASEURL: http://192.168.0.181:8080
+      MAIL_TELEGRAM_APIKEY: laksjdlkasjdl
     env_file: deployment.env
     ports:
       - "127.0.0.1:5080:80"
@@ -41,6 +43,8 @@ services:
       ENVIRONMENT: production
       MAIL_DRIVER: log
       APP_NAME: Engelsystem DEV
+      MAIL_TELEGRAM_BASEURL: http://192.168.0.181:8080
+      MAIL_TELEGRAM_APIKEY: laksjdlkasjdl
     depends_on:
       - es_database
   es_phpmyadmin:
@@ -51,7 +55,7 @@ services:
       - "127.0.0.1:8888:80"
     depends_on:
       - es_database
-    profiles: [ dev ]
+    profiles: [dev]
   es_database:
     image: mariadb:10.9.8
     ports:

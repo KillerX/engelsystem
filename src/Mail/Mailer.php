@@ -2,6 +2,8 @@
 
 namespace Engelsystem\Mail;
 
+use GuzzleHttp\Client as GuzzleClient;
+use Engelsystem\Application;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -11,14 +13,43 @@ class Mailer
     protected $mailer;
 
     /** @var string */
-    protected $fromAddress = '';
+    protected $fromAddress = "";
 
     /** @var string */
     protected $fromName = null;
 
-    public function __construct(MailerInterface $mailer)
+    /** @var GuzzleClient */
+    protected $guzzleClient;
+
+    /** @var Application */
+    protected $app;
+
+    protected $telegram_base;
+    protected $telegram_api_key;
+
+    public function __construct(MailerInterface $mailer, GuzzleClient $g, Application $app)
     {
         $this->mailer = $mailer;
+        $this->guzzleClient = $g;
+        $this->app = $app;
+
+        /** @var Config $config */
+        $config = $app->get("config");
+        $emailConfig = $config->get("email");
+
+        $this->telegram_base = $emailConfig["telegram_base_url"];
+        $this->telegram_api_key = $emailConfig["telegram_api_key"];
+    }
+
+    public function sendTelegram(int $to, string $body): void
+    {
+        $msg = [
+            "to" => "$to",
+            "message" => $body,
+        ];
+
+        $uri = "{$this->telegram_base}/bot/message";
+        $this->guzzleClient->post($uri, ["json" => $msg, "headers" => ["x-api-key" => $this->telegram_api_key]]);
     }
 
     /**
@@ -31,8 +62,8 @@ class Mailer
     public function send($to, string $subject, string $body): void
     {
         $message = (new Email())
-            ->to(...(array)$to)
-            ->from(sprintf('%s <%s>', $this->fromName, $this->fromAddress))
+            ->to(...(array) $to)
+            ->from(sprintf("%s <%s>", $this->fromName, $this->fromAddress))
             ->subject($subject)
             ->text($body);
 

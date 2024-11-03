@@ -1,0 +1,17 @@
+{% extends 'layouts/app.twig' %}
+{% import 'macros/base.twig' as m %}
+{% import 'macros/form.twig' as f %}
+
+{% block title %}Bot registered{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ block('title') }}</h1>
+
+        {% include 'layouts/parts/messages.twig' %}
+
+        <h2>Thank you. Your telegram users is now linked with the BD Service System</h2>
+
+        </form>
+    </div>
+{% endblock %}
