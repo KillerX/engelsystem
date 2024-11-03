@@ -12,44 +12,64 @@ use Psr\Log\LogLevel;
  * @param bool   $notIfItsMe
  * @return bool
  */
-function engelsystem_email_to_user($recipientUser, $title, $message, $notIfItsMe = false)
-{
-    if ($notIfItsMe && auth()->user()->id == $recipientUser->id) {
-        return true;
-    }
+function engelsystem_email_to_user(
+    $recipientUser,
+    $title,
+    $message,
+    $notIfItsMe = false
+) {
+    //if ($notIfItsMe && auth()->user()->id == $recipientUser->id) {
+    //    return true;
+    //}
 
     /** @var Translator $translator */
-    $translator = app()->get('translator');
-    $locale = 'en'; //$translator->getLocale();
+    $translator = app()->get("translator");
+    $locale = "en"; //$translator->getLocale();
 
     $status = true;
     try {
         /** @var EngelsystemMailer $mailer */
-        $mailer = app('mailer');
+        $mailer = app("mailer");
 
-        $translator->setLocale('en_US');//$recipientUser->settings->language);
+        $translator->setLocale("en_US"); //$recipientUser->settings->language);
         $mailer->sendView(
-            $recipientUser->contact->email ? $recipientUser->contact->email : $recipientUser->email,
+            $recipientUser->contact->email
+                ? $recipientUser->contact->email
+                : $recipientUser->email,
             $title,
-            'emails/mail',
-            ['username' => $recipientUser->name, 'message' => $message]
+            "emails/mail",
+            auth()->user()->id,
+            ["username" => $recipientUser->name, "message" => $message]
         );
     } catch (Exception $e) {
         $status = false;
-        engelsystem_log(sprintf(
-            'An exception occurred while sending a mail to %s in %s:%u: %s',
-            $recipientUser->name,
-            $e->getFile(),
-            $e->getLine(),
-            $e->getMessage()
-        ), LogLevel::CRITICAL);
+        engelsystem_log(
+            sprintf(
+                "An exception occurred while sending a mail to %s in %s:%u: %s",
+                $recipientUser->name,
+                $e->getFile(),
+                $e->getLine(),
+                $e->getMessage()
+            ),
+            LogLevel::CRITICAL
+        );
     }
 
     $translator->setLocale($locale);
 
     if (!$status) {
-        error(sprintf(__('User %s could not be notified by email due to an error.'), User_Nick_render($recipientUser)));
-        engelsystem_log(sprintf('User %s could not be notified by email due to an error.', $recipientUser->name));
+        error(
+            sprintf(
+                __("User %s could not be notified by email due to an error."),
+                User_Nick_render($recipientUser)
+            )
+        );
+        engelsystem_log(
+            sprintf(
+                "User %s could not be notified by email due to an error.",
+                $recipientUser->name
+            )
+        );
     }
 
     return $status;
