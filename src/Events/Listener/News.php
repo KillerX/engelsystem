@@ -48,7 +48,7 @@ class News
             ->get();
 
         foreach ($recipients as $recipient) {
-            $this->sendMail($news, $recipient->user, 'notification.news.new', 'emails/news-new');
+            $this->sendMail($news, $recipient->user, 'notification.news.new', 'emails/news-new', 'telegram_messages/news-new');
         }
     }
 
@@ -58,13 +58,14 @@ class News
      * @param string    $subject
      * @param string    $template
      */
-    protected function sendMail(NewsModel $news, User $user, string $subject, string $template)
+    protected function sendMail(NewsModel $news, User $user, string $subject, string $template, string $telegramTemplate)
     {
         try {
             $this->mailer->sendViewTranslated(
                 $user,
                 $subject,
                 $template,
+                $telegramTemplate,
                 ['title' => $news->title, 'news' => $news, 'username' => $user->name]
             );
         } catch (TransportException $e) {

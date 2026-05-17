@@ -15,6 +15,11 @@
         </h1>
 
         {% include 'layouts/parts/messages.twig' %}
+
+        {% if not user.settings.bot_chatid  and user.id == 1 %}
+            <div class="alert alert-info">Link your account with telegram to recieve notifications: <a href="https://t.me/jobb_bd_service_bot?start">Link account!</a></div>
+        {% endif %}
+
         {% for s in sch %}
             {% if (mine_only and s.registered) or not mine_only %}
                 <div class="row" style="padding: 10px;">

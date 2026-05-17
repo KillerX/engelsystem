@@ -51,6 +51,7 @@ class EngelsystemMailer extends Mailer
         $to,
         string $subject,
         string $template,
+        string $telegram_template,
         array $data = [],
         ?string $locale = null
     ): void {
@@ -69,7 +70,7 @@ class EngelsystemMailer extends Mailer
         }
 
         $subject = $this->translation ? $this->translation->translate($subject, $data) : $subject;
-        $this->sendView($to, $subject, $template, $userId, $data);
+        $this->sendView($to, $subject, $template, $telegram_template, $userId, $data);
 
         if ($activeLocale) {
             $this->translation->setLocale($activeLocale);
@@ -85,15 +86,22 @@ class EngelsystemMailer extends Mailer
      * @param array           $data
      * @param int             $userID
      */
-    public function sendView($to, string $subject, string $template, $userID, array $data = []): void
+    public function sendView($to, string $subject, string $template, string $telegram_template, $userID, array $data = []): void
     {
         $body = $this->view->render($template, $data);
+        $this->send($to, $subject, $body);
 
-        if ($userID != null) {
-            $this->sendTelegram($userID, $body);
+        if ($userID === null) {
+            return;
         }
 
-        $this->send($to, $subject, $body);
+        $user = User::find($userID);
+        if (!$user || !$user->settings || !$user->settings->bot_chatid) {
+            return;
+        }
+
+        $telegramBody = $this->view->render($telegram_template, $data);
+        $this->sendTelegram($userID, $telegramBody);
     }
 
     /**

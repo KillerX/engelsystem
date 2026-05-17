@@ -43,13 +43,21 @@ class Mailer
 
     public function sendTelegram(int $to, string $body): void
     {
+        if (empty($this->telegram_base)) {
+            return;
+        }
+
         $msg = [
             "to" => "$to",
             "message" => $body,
         ];
 
         $uri = "{$this->telegram_base}/bot/message";
-        $this->guzzleClient->post($uri, ["json" => $msg, "headers" => ["x-api-key" => $this->telegram_api_key]]);
+        try {
+            $this->guzzleClient->post($uri, ["json" => $msg, "headers" => ["x-api-key" => $this->telegram_api_key]]);
+        } catch (\Throwable $e) {
+            // Telegram transport must never block the email path; swallow and continue.
+        }
     }
 
     /**

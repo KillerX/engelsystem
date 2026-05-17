@@ -18,9 +18,9 @@ function engelsystem_email_to_user(
     $message,
     $notIfItsMe = false
 ) {
-    //if ($notIfItsMe && auth()->user()->id == $recipientUser->id) {
-    //    return true;
-    //}
+    if ($notIfItsMe && auth()->user()->id == $recipientUser->id) {
+        return true;
+    }
 
     /** @var Translator $translator */
     $translator = app()->get("translator");
@@ -38,7 +38,8 @@ function engelsystem_email_to_user(
                 : $recipientUser->email,
             $title,
             "emails/mail",
-            auth()->user()->id,
+            "telegram_messages/telegram",
+            $recipientUser->id,
             ["username" => $recipientUser->name, "message" => $message]
         );
     } catch (Exception $e) {

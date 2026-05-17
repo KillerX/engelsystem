@@ -151,7 +151,7 @@ class CreateUserController extends BaseController
             "active" => 1,
         ]);
 
-        $this->mail->sendView($usr->email, "BD-Service Account", "emails/new_account", $usr->id, [
+        $this->mail->sendView($usr->email, "BD-Service Account", "emails/new_account", "telegram_messages/new_account", $usr->id, [
             "username" => $this->user->name,
             "pass" => $password,
         ]);

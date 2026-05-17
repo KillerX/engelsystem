@@ -204,6 +204,7 @@ function user_angeltype_confirm_email(User $user, array $angeltype): void
             $user,
             'notification.angeltype.confirmed',
             'emails/angeltype-confirmed',
+            'telegram_messages/angeltype-confirmed',
             ['name' => $angeltype['name'], 'angeltype' => $angeltype, 'username' => $user->name]
         );
     } catch (TransportException $e) {
@@ -234,6 +235,7 @@ function user_angeltype_add_email(User $user, array $angeltype): void
             $user,
             'notification.angeltype.added',
             'emails/angeltype-added',
+            'telegram_messages/angeltype-added',
             ['name' => $angeltype['name'], 'angeltype' => $angeltype, 'username' => $user->name]
         );
     } catch (TransportException $e) {

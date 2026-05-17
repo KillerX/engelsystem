@@ -14,7 +14,7 @@ use Engelsystem\Models\User\User;
 use Psr\Log\LoggerInterface;
 use Engelsystem\Models\AngelType;
 use GuzzleHttp\Client as GuzzleClient;
-use Symfony\Component\Console\Application;
+use Engelsystem\Application;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BotController
@@ -99,15 +99,14 @@ class BotController
 
         $token = $request->getAttribute("token");
         $uri = "{$this->telegram_base}/bot/register/";
+
         $response = $this->guzzle->get($uri . $user->id . "/" . $token, [
             "headers" => ["x-api-key" => $this->telegram_api_key],
         ]);
 
         if ($response->getStatusCode() == 202) {
-            //$user->settings->bot_chatid = $response->getBody()->getContents();
-            //$user->save();
-            //
-            print_r($response->getBody()->getContents());
+            $user->settings->bot_chatid = $response->getBody()->getContents();
+            $user->settings->save();
         }
 
         return $this->response->withView("pages/bot/register.twig");
