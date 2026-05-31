@@ -4,6 +4,7 @@ require('jquery-ui');
 window.bootstrap = require('bootstrap');
 window.moment = require('moment');
 require('moment/locale/de');
+window.flatpickr = require('flatpickr');
 require('chart.js');
 require('./forms');
 require('./sticky-headers');

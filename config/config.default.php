@@ -282,6 +282,11 @@ return [
     // Local timezone
     "timezone" => env("TIMEZONE", ini_get("date.timezone") ?: "Europe/Berlin"),
 
+    // Display format for the datetime/date pickers (PHP date() / flatpickr tokens).
+    // The submitted value stays in the backend format; this only controls what the user sees.
+    "datetime_display_format" => env("DATETIME_DISPLAY_FORMAT", "Y-m-d H:i"),
+    "date_display_format" => env("DATE_DISPLAY_FORMAT", "Y-m-d"),
+
     // Multiply 'night shifts' and freeloaded shifts (start or end between 2 and 6 exclusive) by 2
     "night_shifts" => [
         "enabled" => (bool) env("NIGHT_SHIFTS", true), // Disable to weigh every shift the same
