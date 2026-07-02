@@ -204,7 +204,13 @@ body {
   transition: border-color .15s ease, transform .15s ease;
 }
 .job-card:hover { border-color: #7bc98e; color: inherit; transform: translateY(-1px); }
-.job-card--full { background: linear-gradient(180deg, #ffffff 0%, #f6fdf8 100%); }
+.job-card--full {
+  opacity: .6;
+  background: #fbfdfc;
+  border-color: #dfeee4;
+  box-shadow: 0 10px 24px -22px rgba(20, 90, 50, .3);
+}
+.job-card--full:hover { opacity: 1; }
 
 .job-card__top {
   display: flex;

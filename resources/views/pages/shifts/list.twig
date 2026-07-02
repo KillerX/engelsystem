@@ -59,7 +59,7 @@
                             <span class="job-chip">📍 <a class="position-relative" href="/rooms?action=view&room_id={{ s.RID }}">{{ s.room.name }}</a></span>
                         {% endif %}
                         {% if s.min_age > 13 or s.max_age < 100 %}
-                            <span class="job-chip">🎂 {{ s.min_age }} – {{ s.max_age }}</span>
+                            <span class="job-chip">🎂 {{ s.min_age }}{% if s.max_age > 100 %}+{% else %} – {{ s.max_age }}{% endif %}</span>
                         {% endif %}
                     </div>
 
