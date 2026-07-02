@@ -12,6 +12,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
  * @property bool   $email_goody
  * @property bool   $email_shiftinfo
  * @property bool   $email_news
+ * @property string $bot_chatid
  *
  * @method static QueryBuilder|Settings[] whereLanguage($value)
  * @method static QueryBuilder|Settings[] whereTheme($value)

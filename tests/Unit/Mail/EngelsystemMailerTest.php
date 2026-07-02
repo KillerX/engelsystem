@@ -37,7 +37,7 @@ class EngelsystemMailerTest extends TestCase
         $this->setExpects($mailer, 'send', ['foo@bar.baz', 'Lorem dolor', 'Rendered Stuff!']);
         $this->setExpects($view, 'render', ['test/template.tpl', ['dev' => true]], 'Rendered Stuff!');
 
-        $mailer->sendView('foo@bar.baz', 'Lorem dolor', 'test/template.tpl', ['dev' => true]);
+        $mailer->sendView('foo@bar.baz', 'Lorem dolor', 'test/template.tpl', 'test/template.tpl', null, ['dev' => true]);
     }
 
     /**
@@ -65,7 +65,7 @@ class EngelsystemMailerTest extends TestCase
             ->onlyMethods(['sendView'])
             ->getMock();
 
-        $this->setExpects($mailer, 'sendView', ['foo@bar.baz', 'Lorem dolor', 'test/template.tpl', ['dev' => true]]);
+        $this->setExpects($mailer, 'sendView', ['foo@bar.baz', 'Lorem dolor', 'test/template.tpl', 'test/template.tpl', $user->id, ['dev' => true]]);
         $this->setExpects($translator, 'getLocales', null, ['de_DE' => 'de_DE', 'en_US' => 'en_US']);
         $this->setExpects($translator, 'getLocale', null, 'en_US');
         $this->setExpects($translator, 'translate', ['translatable.text', ['dev' => true]], 'Lorem dolor');
@@ -76,6 +76,7 @@ class EngelsystemMailerTest extends TestCase
         $mailer->sendViewTranslated(
             $user,
             'translatable.text',
+            'test/template.tpl',
             'test/template.tpl',
             ['dev' => true],
             'de_DE'

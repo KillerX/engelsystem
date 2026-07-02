@@ -88,6 +88,7 @@ class PasswordResetController extends BaseController
                 $user,
                 'Password recovery',
                 'emails/password-reset',
+                'telegram_messages/password-reset',
                 ['username' => $user->name, 'reset' => $reset]
             );
         }

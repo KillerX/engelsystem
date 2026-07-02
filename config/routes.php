@@ -66,6 +66,10 @@ $route->get('/shifts/list', 'ShiftListController@index');
 $route->get('/shifts/mine', 'ShiftListController@mine');
 $route->get('/shifts/history', 'ShiftListController@history');
 
+
+// Bot
+$route->get('/bot/register/{token:.+}', 'BotController@register');
+
 // Administration
 $route->addGroup(
     '/admin',

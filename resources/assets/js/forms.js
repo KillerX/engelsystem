@@ -120,6 +120,41 @@ $(function () {
     });
 })
 
+/*
+ * Replace the native datetime/date inputs with flatpickr.
+ *
+ * The visible (alt) input shows the admin-configured display format
+ * (data-alt-format), while the original named input keeps the backend
+ * format, so submitted values are unchanged.
+ */
+$(function () {
+    if (typeof flatpickr === 'undefined') {
+        return;
+    }
+
+    var init = function (selector, options) {
+        $(selector).each(function () {
+            var altFormat = this.dataset.altFormat || options.dateFormat;
+            var config = $.extend({}, options, {
+                altInput: true,
+                altFormat: altFormat,
+                // 12h clock only when the format uses h/g and not 24h H
+                time_24hr: !/[hg]/.test(altFormat) || /H/.test(altFormat),
+            });
+            if (this.min) {
+                config.minDate = this.min;
+            }
+            if (this.max) {
+                config.maxDate = this.max;
+            }
+            flatpickr(this, config);
+        });
+    };
+
+    init('.input-group.datetime input', { enableTime: true, dateFormat: 'Y-m-d H:i' });
+    init('.input-group.date input', { dateFormat: 'Y-m-d' });
+});
+
 /**
  * Show oauth buttons on welcome title click
  */

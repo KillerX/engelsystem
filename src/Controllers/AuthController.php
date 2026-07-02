@@ -32,8 +32,8 @@ class AuthController extends BaseController
 
     /** @var array */
     protected $permissions = [
-        'login'     => 'login',
-        'postLogin' => 'login',
+        "login" => "login",
+        "postLogin" => "login",
     ];
 
     /**
@@ -70,10 +70,7 @@ class AuthController extends BaseController
      */
     protected function showLogin(): Response
     {
-        return $this->response->withView(
-            'pages/login',
-            $this->getNotifications()
-        );
+        return $this->response->withView("pages/login", $this->getNotifications());
     }
 
     /**
@@ -85,14 +82,14 @@ class AuthController extends BaseController
     public function postLogin(Request $request): Response
     {
         $data = $this->validate($request, [
-            'login'    => 'required',
-            'password' => 'required',
+            "login" => "required",
+            "password" => "required",
         ]);
 
-        $user = $this->auth->authenticate($data['login'], $data['password']);
+        $user = $this->auth->authenticate($data["login"], $data["password"]);
 
         if (!$user instanceof User) {
-            $this->addNotification('auth.not-found', 'errors');
+            $this->addNotification("auth.not-found", "errors");
 
             return $this->showLogin();
         }
@@ -107,16 +104,16 @@ class AuthController extends BaseController
      */
     public function loginUser(User $user): Response
     {
-        $previousPage = $this->session->get('previous_page');
+        $previousPage = $this->session->get("previous_page");
 
         $this->session->invalidate();
-        $this->session->set('user_id', $user->id);
-        $this->session->set('locale', $user->settings->language);
+        $this->session->set("user_id", $user->id);
+        $this->session->set("locale", $user->settings->language);
 
         $user->last_login_at = new Carbon();
-        $user->save(['touch' => false]);
+        $user->save(["touch" => false]);
 
-        return $this->redirect->to($previousPage ?: $this->config->get('home_site'));
+        return $this->redirect->to($previousPage ?: $this->config->get("home_site"));
     }
 
     /**
@@ -126,6 +123,6 @@ class AuthController extends BaseController
     {
         $this->session->invalidate();
 
-        return $this->redirect->to('/');
+        return $this->redirect->to("/");
     }
 }

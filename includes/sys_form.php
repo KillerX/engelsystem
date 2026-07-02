@@ -70,7 +70,7 @@ function form_date($name, $label, $value, $start_date = '', $end_date = '')
 
     return form_element($label, '
     <div class="input-group date" id="' . $dom_id . '">
-        <input type="date" placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" min="' . $start_date . '" max="' . $end_date . '" name="' . $name . '" class="form-control" value="' . htmlspecialchars((string)$value) . '" autocomplete="off">
+        <input type="date" placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" min="' . $start_date . '" max="' . $end_date . '" name="' . $name . '" class="form-control" value="' . htmlspecialchars((string)$value) . '" autocomplete="off" data-alt-format="' . htmlspecialchars((string) config('date_display_format')) . '">
     </div>
     ', $dom_id);
 }
@@ -94,9 +94,9 @@ function form_datetime(string $name, string $label, $value)
     return form_element($label, sprintf('
     <div class="input-group datetime" id="%s">
         <input type="datetime-local" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2} ([01][0-9]|2[0-3]):[0-5][0-9]" placeholder="YYYY-MM-DD HH:MM" name="%s"
-            class="form-control" value="%s" autocomplete="off">
+            class="form-control" value="%s" autocomplete="off" data-alt-format="%s">
     </div>
-    ', $dom_id, $name, htmlspecialchars($value ? $value->format('Y-m-d H:i') : ''), $dom_id), $dom_id);
+    ', $dom_id, $name, htmlspecialchars($value ? $value->format('Y-m-d H:i') : ''), htmlspecialchars((string) config('datetime_display_format')), $dom_id), $dom_id);
 }
 
 /**

@@ -10,6 +10,7 @@ $nav-tabs-link-active-bg:           $primary !default;
 $nav-tabs-link-active-border-color: none !default;
 
 // Imports
+@import "~flatpickr/dist/flatpickr";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";

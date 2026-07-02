@@ -18,6 +18,9 @@ _vimrc_local.vim
 /.idea/
 /.phpstorm.meta.php
 
+# Phpactor editor config
+/.phpactor.json
+
 # Docker .env files
 /docker/.env
 /docker/deployment.env
