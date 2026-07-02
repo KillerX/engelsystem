@@ -58,11 +58,20 @@ class SessionServiceProvider extends ServiceProvider
                 break;
         }
 
+        $options = [
+            'cookie_httponly' => true,
+            'name'            => $sessionConfig['name'],
+        ];
+
+        // A lifetime of 0 keeps PHP's defaults (idle timeout + cookie dies on browser close)
+        $lifetime = (int) ($sessionConfig['lifetime'] ?? 0);
+        if ($lifetime > 0) {
+            $options['gc_maxlifetime'] = $lifetime;
+            $options['cookie_lifetime'] = $lifetime;
+        }
+
         return $this->app->make(NativeSessionStorage::class, [
-            'options' => [
-                'cookie_httponly' => true,
-                'name'            => $sessionConfig['name'],
-            ],
+            'options' => $options,
             'handler' => $handler,
         ]);
     }

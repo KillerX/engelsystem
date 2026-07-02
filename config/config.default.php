@@ -346,6 +346,10 @@ return [
 
         // Cookie name
         "name" => env("SESSION_NAME", "session"),
+
+        // How long (in seconds) a session stays valid / a user stays logged in.
+        // Applies to both server-side expiry and the login cookie. Default: 365 days.
+        "lifetime" => (int) env("SESSION_LIFETIME", 365 * 24 * 60 * 60),
     ],
 
     // IP addresses of reverse proxies that are trusted, can be an array or a comma separated list
