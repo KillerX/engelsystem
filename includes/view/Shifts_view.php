@@ -14,42 +14,31 @@ use Illuminate\Support\Collection;
  */
 function Shift_view_header($shift, Room $room)
 {
-    return div('row', [
-        div('col-sm-3 col-xs-6', [
-            '<h4>' . __('Title') . '</h4>',
-            '<p class="lead">'
-            . ($shift['URL'] != ''
-                ? '<a href="' . $shift['URL'] . '">' . $shift['title'] . '</a>'
-                : $shift['title'])
-            . '</p>'
-        ]),
-        div('col-sm-3 col-xs-6', [
-            '<h4>' . __('Start') . '</h4>',
-            '<p class="lead' . (time() >= $shift['start'] ? ' text-success' : '') . '">',
-            icon('calendar3') . date(__('d.m.Y'), $shift['start']),
-            '<br />',
-            icon('clock') . date('H:i', $shift['start']),
-            '</p>'
-        ]),
-        div('col-sm-3 col-xs-6', [
-            '<h4>' . __('End') . '</h4>',
-            '<p class="lead' . (time() >= $shift['end'] ? ' text-success' : '') . '">',
-            icon('calendar3') . date(__('d.m.Y'), $shift['end']),
-            '<br />',
-            icon('clock') . date('H:i', $shift['end']),
-            '</p>'
-        ]),
+    $title = $shift['URL'] != ''
+        ? '<a href="' . $shift['URL'] . '">' . htmlspecialchars((string)$shift['title']) . '</a>'
+        : htmlspecialchars((string)$shift['title']);
 
-        ($shift['address']) ?
-            div('col-sm-3 col-xs-6', [
-                '<h4>' . __('Address') . '</h4>',
-                '<p class="lead"> <a href="https://www.google.com/maps/search/?api=1&query='.$shift['address'].'">' . $shift['address'] . '</a></p>'
-            ]) :
-            div('col-sm-3 col-xs-6', [
-                '<h4>' . __('Location') . '</h4>',
-                '<p class="lead">' . Room_name_render($room) . '</p>'
-            ]),
-    ]);
+    if ($shift['address']) {
+        $addressCard = '<div class="bd-stat"><div class="bd-stat__label">' . __('Address') . '</div>'
+            . '<div class="bd-stat__value"><a href="https://www.google.com/maps/search/?api=1&query='
+            . urlencode($shift['address']) . '" target="_blank" rel="noopener">📍 '
+            . htmlspecialchars((string)$shift['address']) . '</a></div></div>';
+    } else {
+        $addressCard = '<div class="bd-stat"><div class="bd-stat__label">' . __('Location') . '</div>'
+            . '<div class="bd-stat__value">📍 ' . Room_name_render($room) . '</div></div>';
+    }
+
+    return '<div class="bd-stats">'
+        . '<div class="bd-stat"><div class="bd-stat__label">' . __('Title') . '</div>'
+        . '<div class="bd-stat__value">' . $title . '</div></div>'
+        . '<div class="bd-stat"><div class="bd-stat__label">' . __('Start') . '</div>'
+        . '<div class="bd-stat__value">📅 ' . date(__('d.m.Y'), $shift['start']) . '</div>'
+        . '<div class="bd-stat__value bd-stat__value--accent">🕘 ' . date('H:i', $shift['start']) . '</div></div>'
+        . '<div class="bd-stat"><div class="bd-stat__label">' . __('End') . '</div>'
+        . '<div class="bd-stat__value">📅 ' . date(__('d.m.Y'), $shift['end']) . '</div>'
+        . '<div class="bd-stat__value bd-stat__value--accent">🕘 ' . date('H:i', $shift['end']) . '</div></div>'
+        . $addressCard
+        . '</div>';
 }
 
 /**
@@ -95,12 +84,13 @@ function Shift_signup_button_render($shift, $angeltype, $user_angeltype = null)
             || User_is_AngelType_supporter(auth()->user(), $angeltype)
         )
     ) {
-        return button(shift_entry_create_link($shift, $angeltype), __('Sign up'));
+        return button(shift_entry_create_link($shift, $angeltype), __('Sign up'), 'btn-signup');
     } elseif (empty($user_angeltype)) {
         return button(
             page_link_to('angeltypes', ['action' => 'view', 'angeltype_id' => $angeltype['id']]),
             sprintf(__('Become %s'),
-                $angeltype['name'])
+                $angeltype['name']),
+            'btn-pill-outline'
         );
     }
     return '';
@@ -165,51 +155,73 @@ function Shift_view($shift, $shifttype, Room $room, $angeltypes_source, ShiftSig
         ), true);
     }
 
-    $buttons = [];
-    if ($shift_admin || $admin_shifttypes || $admin_rooms) {
-        $buttons = [
-            $shift_admin ? button(shift_edit_link($shift), icon('pencil') . __('edit')) : '',
-            $shift_admin ? button(shift_delete_link($shift), icon('trash') . __('delete')) : '',
-            //$admin_shifttypes ? button(shifttype_link($shifttype), $shifttype['name']) : '',
-            //$admin_rooms ? button(room_link($room), icon('geo-alt') . $room->name) : '',
-            $shift_admin ? button("/export_shift/" . $shift["SID"], icon('file-earmark-excel') . "Export") : '',
-        ];
+    // ---- title header + action buttons ----
+    $actions = '';
+    if ($shift_admin) {
+        $actions .= '<a class="btn btn-pill-outline" href="' . shift_edit_link($shift) . '">✏️ ' . __('edit') . '</a>';
+        $actions .= '<a class="btn btn-pill-danger" href="' . shift_delete_link($shift) . '">🗑 ' . __('delete') . '</a>';
+        $actions .= '<a class="btn btn-pill-outline" href="/export_shift/' . $shift['SID'] . '">📊 Export</a>';
     }
-    $buttons[] = button(user_link(auth()->user()->id), '<span class="bi bi-person-circle"></span> ' . __('My shifts'));
-    $content[] = buttons($buttons);
+    $actions .= '<a class="btn btn-signup" href="' . user_link(auth()->user()->id) . '">👤 ' . __('My shifts') . '</a>';
 
+    $content[] = '<a class="bd-back" href="/shifts/list">← ' . __('Back to jobs') . '</a>'
+        . '<div class="bd-detail__head">'
+        . '<div class="bd-detail__titlewrap">'
+        . '<h1 class="bd-title">' . htmlspecialchars((string)$shift['title']) . '</h1>'
+        . '<span class="bd-countdown">⏳ <span class="moment-countdown" data-timestamp="'
+        . $shift['start'] . '">%c</span></span>'
+        . '</div>'
+        . '<div class="bd-actions">' . $actions . '</div>'
+        . '</div>';
+
+    // ---- stat cards ----
     $content[] = Shift_view_header($shift, $room);
 
-    $content[] = div('row', [
-        div('col-sm-6', [
-            $shift['requirements'] ? '<h2>' . __('Bekledning/Nødvendig utstyr') . '</h2>' . $parsedown->parse((string)$shift['requirements']) : '',
-        ]),
-        div('col-sm-6', [
-            $shift['responsible_name'] ? '<h2>' . __('Ansvarlig') . '</h2>' . $parsedown->parse((string)$shift['responsible_name']) : '',
-            $shift['responsible_phone'] ? 'Telefon: <a href="tel:'. $shift['responsible_phone'] . '">' . $shift['responsible_phone'] . '</a>' : '',
-        ]),
-    ]);
+    // ---- right column: responsible + requirements + description ----
+    $rightPanels = '<div class="bd-panel"><h2>' . __('Ansvarlig') . '</h2>';
+    if ($shift['responsible_name']) {
+        $name = trim((string)$shift['responsible_name']);
+        $initials = '';
+        foreach (preg_split('/\s+/', $name) as $word) {
+            if ($word !== '') {
+                $initials .= mb_strtoupper(mb_substr($word, 0, 1));
+            }
+        }
+        $initials = mb_substr($initials, 0, 2);
+        $rightPanels .= '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">'
+            . '<span class="bd-avatar">' . htmlspecialchars($initials) . '</span>'
+            . '<div class="bd-stat__value">' . htmlspecialchars($name) . '</div></div>';
+    }
+    if ($shift['responsible_phone']) {
+        $rightPanels .= '<div class="bd-contact">📞 ' . __('Telefon') . ': <a href="tel:'
+            . htmlspecialchars((string)$shift['responsible_phone']) . '">'
+            . htmlspecialchars((string)$shift['responsible_phone']) . '</a></div>';
+    }
+    if (!$shift['responsible_name'] && !$shift['responsible_phone']) {
+        $rightPanels .= '<p class="bd-desc">—</p>';
+    }
+    $rightPanels .= '</div>';
 
-    $content[] = div('row', [
-        div('col-sm-6', [
-            '<h2>' . __('Needed workers') . '</h2>',
-            '<div class="list-group">' . $needed_angels . '</div>'
-        ]),
-        div('col-sm-6', [
-            '<h2>' . __('Description') . '</h2>',
-            $parsedown->parse((string)$shifttype['description']),
-            $parsedown->parse((string)$shift['description']),
-        ])
-    ]);
-
-    if ($shift_admin) {
-        $content[] = Shift_editor_info_render($shift);
+    if ($shift['requirements']) {
+        $rightPanels .= '<div class="bd-panel"><h2>' . __('Bekledning/Nødvendig utstyr') . '</h2>'
+            . '<div class="bd-desc">' . $parsedown->parse((string)$shift['requirements']) . '</div></div>';
     }
 
-    return page_with_title(
-        $shift['title'] . ' <small class="moment-countdown" data-timestamp="' . $shift['start'] . '">%c</small>',
-        $content
-    );
+    $rightPanels .= '<div class="bd-panel"><h2>' . __('Description') . '</h2><div class="bd-desc">'
+        . $parsedown->parse((string)$shifttype['description'])
+        . $parsedown->parse((string)$shift['description'])
+        . '</div></div>';
+
+    // ---- left column: needed workers ----
+    $editor = $shift_admin ? '<div class="bd-meta-note"><span style="font-size:16px;">➕</span> '
+        . Shift_editor_info_render($shift) . '</div>' : '';
+
+    $content[] = '<div class="bd-cols">'
+        . '<div class="bd-panel"><h2>' . __('Needed workers') . '</h2>' . $needed_angels . $editor . '</div>'
+        . '<div class="bd-side">' . $rightPanels . '</div>'
+        . '</div>';
+
+    return div('bd-page bd-detail', $content);
 }
 
 /**
@@ -224,29 +236,13 @@ function Shift_view_render_needed_angeltype($needed_angeltype, $angeltypes, $shi
     $angeltype = $angeltypes[$needed_angeltype['TID']];
     $angeltype_supporter = User_is_AngelType_supporter(auth()->user(), $angeltype);
 
-    $needed_angels = '';
-
-    $class = 'progress-bar-warning';
-    if ($needed_angeltype['taken'] == 0) {
-        $class = 'progress-bar-danger';
-    }
-    if ($needed_angeltype['taken'] >= $needed_angeltype['count']) {
-        $class = 'progress-bar-success';
-    }
-    $needed_angels .= '<div class="list-group-item">';
-
-    $needed_angels .= '<div class="float-end m-3">' . Shift_signup_button_render($shift, $angeltype) . '</div>';
-
-    $needed_angels .= '<h3>' . AngelType_name_render($angeltype) . '</h3>';
-    $bar_max = max($needed_angeltype['count'] * 10, $needed_angeltype['taken'] * 10, 10);
-    $bar_value = max($bar_max / 10, $needed_angeltype['taken'] * 10);
-    $needed_angels .= progress_bar(
-        0,
-        $bar_max,
-        $bar_value,
-        $class,
-        $needed_angeltype['taken'] . ' / ' . $needed_angeltype['count']
-    );
+    $taken = (int)$needed_angeltype['taken'];
+    $count = (int)$needed_angeltype['count'];
+    $full = $count > 0 && $taken >= $count;
+    $pct = $count > 0 ? min(100, (int)floor($taken * 100 / $count)) : ($taken > 0 ? 100 : 0);
+    $label = $full
+        ? ($taken . ' / ' . $count . ' · ' . __('Full') . ' 🎉')
+        : ($taken . ' / ' . $count);
 
     $angels = [];
     foreach ($shift['ShiftEntry'] as $shift_entry) {
@@ -255,10 +251,13 @@ function Shift_view_render_needed_angeltype($needed_angeltype, $angeltypes, $shi
         }
     }
 
-    $needed_angels .= join(', ', $angels);
-    $needed_angels .= '</div>';
-
-    return $needed_angels;
+    return '<div class="bd-need-box">'
+        . '<div class="bd-need-box__head"><h3>' . AngelType_name_render($angeltype) . '</h3>'
+        . Shift_signup_button_render($shift, $angeltype) . '</div>'
+        . '<div class="bd-progress-lg"><div class="bd-progress-lg__bar" style="width:' . $pct . '%;">'
+        . $label . '</div></div>'
+        . '<div class="worker-chips">' . join('', $angels) . '</div>'
+        . '</div>';
 }
 
 /**
@@ -275,10 +274,11 @@ function Shift_view_render_shift_entry($shift_entry, $user_shift_admin, $angelty
         $entry = '<del>' . $entry . '</del>';
     }
     $isUser = $shift_entry['UID'] == auth()->user()->id;
+    $controls = '';
     if ($user_shift_admin || $angeltype_supporter || $isUser) {
-        $entry .= ' <div class="btn-group m-1">';
+        $controls .= '<span class="btn-group">';
         if ($user_shift_admin || $isUser) {
-            $entry .= button_icon(
+            $controls .= button_icon(
                 page_link_to('user_myshifts', ['edit' => $shift_entry['id'], 'id' => $shift_entry['UID']]),
                 'pencil',
                 'btn-sm'
@@ -286,10 +286,10 @@ function Shift_view_render_shift_entry($shift_entry, $user_shift_admin, $angelty
         }
         $angeltype = AngelType($shift_entry['TID']);
         $disabled = Shift_signout_allowed($shift, $angeltype, $shift_entry['UID']) ? '' : ' btn-disabled';
-        $entry .= button_icon(shift_entry_delete_link($shift_entry), 'trash', 'btn-sm' . $disabled);
-        $entry .= '</div>';
+        $controls .= button_icon(shift_entry_delete_link($shift_entry), 'trash', 'btn-sm' . $disabled);
+        $controls .= '</span>';
     }
-    return $entry;
+    return '<span class="bd-worker">' . $entry . $controls . '</span>';
 }
 
 /**

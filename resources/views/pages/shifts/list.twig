@@ -4,71 +4,103 @@
 
 
 {% block content %}
-    <div class="container">
-        <h1>
-            {{ title }}
+    <div class="bd-page">
+        <div class="bd-jobs__head">
+            <h1 class="bd-title">{{ title }}</h1>
             {% if not mine_only %}
-                <a style="float: right" class="btn btn-primary" href="/shifts/mine">My jobs</a>
+                <a class="btn btn-pill-outline" href="/shifts/mine">My jobs</a>
             {% else %}
-                <a style="float: right" class="btn btn-primary" href="/shifts/list">All jobs</a>
+                <a class="btn btn-pill-outline" href="/shifts/list">All jobs</a>
             {% endif %}
-        </h1>
+        </div>
 
         {% include 'layouts/parts/messages.twig' %}
 
-        {% if not user.settings.bot_chatid  and user.id == 1 %}
-            <div class="alert alert-info">Link your account with telegram to recieve notifications: <a href="https://t.me/jobb_bd_service_bot?start">Link account!</a></div>
+        {% if not user.settings.bot_chatid and user.id == 1 %}
+            <div class="bd-banner">
+                <span style="font-size: 22px;">🔔</span>
+                <span>Link your account with Telegram to receive notifications:
+                    <a href="https://t.me/jobb_bd_service_bot?start">Link account!</a></span>
+            </div>
         {% endif %}
 
         {% for s in sch %}
             {% if (mine_only and s.registered) or not mine_only %}
-                <div class="row" style="padding: 10px;">
-                    <div class="lane">
-                        <div class="card-body bg-dark border border-{{ s.border }}">
-                            <div class="card-header d-flex align-items-center">
-                                <a class="d-flex align-items-center text-white" href="/shifts?action=view&shift_id={{ s.SID }}"><h2>{{ s.start|date('D d.m.Y') }} - {{ s.title }}</h2></a>
+                {% set total = 0 %}
+                {% set taken = 0 %}
+                {% for needed in s.neededAngels %}
+                    {% if needed.count > 0 %}
+                        {% set total = total + needed.count %}
+                        {% set taken = taken + (needed.count - needed.remaining) %}
+                    {% endif %}
+                {% endfor %}
+                {% set pct = total > 0 ? (taken / total * 100)|round : 0 %}
+                {% set full = total > 0 and taken >= total %}
+
+                <div class="job-card position-relative{{ full ? ' job-card--full' : '' }}">
+                    <div class="job-card__top">
+                        <span class="job-card__date">{{ s.start|date('D d.m.Y') }}</span>
+                        <h2 class="job-card__title">
+                            <a class="stretched-link text-reset" href="/shifts?action=view&shift_id={{ s.SID }}">{{ s.title }}</a>
+                        </h2>
+                    </div>
+
+                    <div class="job-meta">
+                        <span class="job-chip">🕘 {{ s.start|date('H:i') }} – {{ s.end|date('H:i') }}</span>
+                        {% if s.responsible_name %}
+                            <span class="job-chip">👤 {{ s.responsible_name }}{% if s.responsible_phone %} · <a class="position-relative" href="tel:{{ s.responsible_phone }}">{{ s.responsible_phone }}</a>{% endif %}</span>
+                        {% endif %}
+                        {% if s.requirements %}
+                            <span class="job-chip">👕 {{ s.requirements }}</span>
+                        {% endif %}
+                        {% if s.address %}
+                            <span class="job-chip">📍 <a class="position-relative" href="https://www.google.com/maps/search/?api=1&query={{ s.address|url_encode }}" target="_blank" rel="noopener">{{ s.address }}</a></span>
+                        {% else %}
+                            <span class="job-chip">📍 <a class="position-relative" href="/rooms?action=view&room_id={{ s.RID }}">{{ s.room.name }}</a></span>
+                        {% endif %}
+                        {% if s.min_age > 13 or s.max_age < 100 %}
+                            <span class="job-chip">🎂 {{ s.min_age }} – {{ s.max_age }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if s.description %}
+                        <p class="job-desc">ℹ️ {{ s.description }}</p>
+                    {% endif %}
+
+                    {% if total > 0 %}
+                        <div class="job-need">
+                            <div class="job-need__row">
+                                <span class="job-need__label">
+                                    {% for needed in s.neededAngels %}{% if needed.count > 0 %}{{ needed.angelType.name }}{% if not loop.last %} · {% endif %}{% endif %}{% endfor %}
+                                </span>
+                                <div class="job-progress">
+                                    <div class="job-progress__bar" style="width: {{ pct }}%;"></div>
+                                </div>
+                                {% if full %}
+                                    <span class="job-need__count job-need__count--full">{{ taken }} / {{ total }} · Full 🎉</span>
+                                {% else %}
+                                    <span class="job-need__count">{{ taken }} / {{ total }}</span>
+                                {% endif %}
+                                {% for needed in s.neededAngels %}
+                                    {% if needed.remaining > 0 and not s.registered and s.canRegister(user.personalData.birthday) %}
+                                        <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}"
+                                           class="btn btn-signup position-relative d-print-none">Sign up →</a>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                            {{ s.start|date('H:i') }} - {{ s.end|date('H:i') }}<br/>
 
-                            {% if s.responsible_name %}
-                                Ansvarlig: {{ s.responsible_name }} {% if s.responsible_phone %} Tlf: (<a href="tel:{{ s.responsible_phone }}">{{ s.responsible_phone }}</a>)<br/>
-                                {% endif %}
-                            {% endif %}
-                            {% if s.address %}
-                                Addresse: <a href="https://www.google.com/maps/search/?api=1&query={{ s.address }}">{{ s.address }}</a><br/>
-                            {% else %}
-                            <a href="/rooms?action=view&room_id={{s.RID}}"><span class="bi bi-geo-alt"></span> {{ s.room.name }}</a><br/>
-                            {% endif %}
-                            {% if s.requirements %}
-                                Bekledning/Nødvendig utstyr: {{ s.requirements }}<br/>
-                            {% endif %}
-
-                            {% if s.min_age > 13 or s.max_age < 100 %}
-                                Alder: {{ s.min_age }} - {{ s.max_age }}<br/>
-                            {% endif %}
-
-                            {% if s.description %}
-                                <span class="bi bi-info-circle"></span> {{ s.description }}<br>
-                            {% endif %}
-
-                            {% for needed in s.neededAngels %}
-                                {% if needed.count > 0 %}
-                                    <div class="col-md-12" style="padding-bottom: 10px;">
-                                        <strong>
-                                            <a href="/angeltypes?action=view&angeltype_id={{ needed.angelType.id }}">{{ needed.angelType.name }}</a>:</strong><span class="me-1"> {{ needed.count - needed.remaining }}/{{ needed.count }} registered</span>
-                                        {% if needed.remaining > 0 and not s.registered and s.canRegister(user.personalData.birthday) %}
-                                            <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}" class="btn btn-sm btn-primary text-nowrap d-print-none">Sign up</a>
-                                        {% endif %}
-                                        <div>
-                                            {{ needed.registered_users }}
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-
+                            <div class="worker-chips">
+                                {% for needed in s.neededAngels %}
+                                    {% if needed.registered_users %}
+                                        {% for worker in needed.registered_users|split(',') %}
+                                            {% if worker|trim %}<span class="worker-chip">{{ worker|trim }}</span>{% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
+                    {% endif %}
                 </div>
-            </div>
             {% endif %}
         {% endfor %}
     </div>

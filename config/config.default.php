@@ -18,7 +18,7 @@ return [
     "maintenance" => (bool) env("MAINTENANCE", false),
 
     // Application name (not the event name!)
-    "app_name" => env("APP_NAME", "Worksystem"),
+    "app_name" => env("APP_NAME", "BD-Service"),
 
     // Set to development to enable debugging messages
     "environment" => env("ENVIRONMENT", "production"),
@@ -127,9 +127,14 @@ return [
     ],
 
     // Default theme, 1=style1.css
-    "theme" => env("THEME", 1),
+    "theme" => env("THEME", 16),
 
     "themes" => [
+        16 => [
+            "name" => "BD-Service",
+            "type" => "light",
+            "navbar_classes" => "navbar-light bg-white",
+        ],
         15 => [
             "name" => "Engelsystem rC3 (2021)",
             "type" => "dark",
