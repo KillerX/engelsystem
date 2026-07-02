@@ -263,6 +263,12 @@ body {
 }
 
 .job-need { margin-bottom: 12px; }
+.job-need__type + .job-need__type {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed #dcefe2;
+}
+.job-need__type .worker-chips { margin-top: 4px; }
 .job-need__row {
   display: flex;
   align-items: center;

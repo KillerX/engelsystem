@@ -69,35 +69,37 @@
 
                     {% if total > 0 %}
                         <div class="job-need">
-                            <div class="job-need__row">
-                                <span class="job-need__label">
-                                    {% for needed in s.neededAngels %}{% if needed.count > 0 %}{{ needed.angelType.name }}{% if not loop.last %} · {% endif %}{% endif %}{% endfor %}
-                                </span>
-                                <div class="job-progress">
-                                    <div class="job-progress__bar" style="width: {{ pct }}%;"></div>
-                                </div>
-                                {% if full %}
-                                    <span class="job-need__count job-need__count--full">{{ taken }} / {{ total }} · Full 🎉</span>
-                                {% else %}
-                                    <span class="job-need__count">{{ taken }} / {{ total }}</span>
+                            {% for needed in s.neededAngels %}
+                                {% if needed.count > 0 %}
+                                    {% set t_taken = needed.count - needed.remaining %}
+                                    {% set t_full = t_taken >= needed.count %}
+                                    {% set t_pct = (t_taken / needed.count * 100)|round %}
+                                    <div class="job-need__type">
+                                        <div class="job-need__row">
+                                            <span class="job-need__label">{{ needed.angelType.name }}</span>
+                                            <div class="job-progress">
+                                                <div class="job-progress__bar" style="width: {{ t_pct }}%;"></div>
+                                            </div>
+                                            {% if t_full %}
+                                                <span class="job-need__count job-need__count--full">{{ t_taken }} / {{ needed.count }} · Full 🎉</span>
+                                            {% else %}
+                                                <span class="job-need__count">{{ t_taken }} / {{ needed.count }}</span>
+                                            {% endif %}
+                                            {% if needed.remaining > 0 and not s.registered and s.canRegister(user.personalData.birthday) %}
+                                                <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}"
+                                                   class="btn btn-signup position-relative d-print-none">Sign up →</a>
+                                            {% endif %}
+                                        </div>
+                                        {% if needed.registered_users %}
+                                            <div class="worker-chips">
+                                                {% for worker in needed.registered_users|split(',') %}
+                                                    {% if worker|trim %}<span class="worker-chip">{{ worker|trim }}</span>{% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 {% endif %}
-                                {% for needed in s.neededAngels %}
-                                    {% if needed.remaining > 0 and not s.registered and s.canRegister(user.personalData.birthday) %}
-                                        <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}"
-                                           class="btn btn-signup position-relative d-print-none">Sign up →</a>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-
-                            <div class="worker-chips">
-                                {% for needed in s.neededAngels %}
-                                    {% if needed.registered_users %}
-                                        {% for worker in needed.registered_users|split(',') %}
-                                            {% if worker|trim %}<span class="worker-chip">{{ worker|trim }}</span>{% endif %}
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                            {% endfor %}
                         </div>
                     {% endif %}
                 </div>
