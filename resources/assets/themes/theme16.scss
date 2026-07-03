@@ -151,6 +151,88 @@ body {
 }
 .btn-pill-danger:hover { background: #fdeeec; }
 
+// ---- Forms (admin + user) ----------------------------------------------
+.form-label {
+  font-weight: 800;
+  color: $bd-ink;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1.5px solid $bd-border;
+  background-color: #fff;
+  color: $bd-ink;
+  padding: 10px 14px;
+  font-weight: 600;
+  box-shadow: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.form-control::placeholder { color: #9bb4a5; }
+.form-control:focus,
+.form-select:focus {
+  border-color: $bd-green;
+  box-shadow: 0 0 0 .2rem rgba(47, 158, 94, .18);
+  background-color: #fff;
+  color: $bd-ink;
+}
+textarea.form-control { border-radius: 16px; }
+.form-control:disabled,
+.form-select:disabled { background-color: #f2f7f4; color: #7a9a86; }
+
+.input-group-text {
+  border-radius: 12px;
+  border: 1.5px solid $bd-border;
+  background: $bd-chip-bg;
+  color: $bd-ink-soft;
+  font-weight: 700;
+}
+
+.form-check-input {
+  border-color: #b6d8c3;
+  &:checked { background-color: $bd-green; border-color: $bd-green; }
+  &:focus {
+    border-color: $bd-green;
+    box-shadow: 0 0 0 .2rem rgba(47, 158, 94, .18);
+  }
+}
+.form-switch .form-check-input:checked { background-color: $bd-green; }
+
+// select2 multi-selects (shift / angeltype forms)
+.select2-container--bootstrap-5 .select2-selection {
+  border-radius: 12px !important;
+  border: 1.5px solid $bd-border !important;
+}
+.select2-container--bootstrap-5.select2-container--focus .select2-selection {
+  border-color: $bd-green !important;
+  box-shadow: 0 0 0 .2rem rgba(47, 158, 94, .18) !important;
+}
+.select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice {
+  background: $bd-chip-bg;
+  border: 1px solid $bd-border;
+  border-radius: 999px;
+  color: $bd-ink-soft;
+  font-weight: 700;
+}
+
+// Give real edit forms a modern card panel — scoped with :has() so
+// button-only action forms (delete/toggle) stay untouched. Inline and
+// btn-group forms carry a class/style attribute and are excluded.
+form:not([class]):not([style]):has(.form-control, .form-select, textarea, .form-check) {
+  background: #fff;
+  border: 2px solid $bd-border-2;
+  border-radius: 22px;
+  padding: clamp(20px, 3vw, 30px);
+  box-shadow: 0 16px 34px -26px rgba(20, 90, 50, .4);
+  max-width: 860px;
+
+  .form-control,
+  .form-select { max-width: 560px; }
+  textarea.form-control { max-width: none; }
+}
+
 // ---- Page wrappers ------------------------------------------------------
 .bd-page {
   max-width: 1180px;
