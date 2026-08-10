@@ -2,12 +2,14 @@
 
 namespace Engelsystem\Controllers;
 
+use Carbon\Carbon;
 use Engelsystem\Config\Config;
 use Engelsystem\Helpers\Authenticator;
 use Engelsystem\Http\Redirector;
 use Engelsystem\Http\Request;
 use Engelsystem\Http\Response;
 use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Database\Eloquent\Collection;
 use Engelsystem\Models\Shifts\Schedule;
 use Engelsystem\Models\Shifts\Shift;
 use Psr\Log\LoggerInterface;
@@ -100,11 +102,12 @@ SELECT shift_id,
 angel_type_id,
 GREATEST(0, count-COALESCE(CNT, 0)) remaining,
 COALESCE(UserRegistered, 0) user_registered,
+c.UserEntryId user_entry_id,
 c.u users_list
 FROM NeededAngelTypes nat
                 LEFT JOIN
                     (
-                        SELECT GROUP_CONCAT(CONCAT(upd.first_name, ' ', upd.last_name)) as u, upd.user_id, upd.first_name, upd.last_name, SID, TID, COUNT(*) as CNT, SUM(IF(UID = ?, 1, 0)) as UserRegistered FROM ShiftEntry
+                        SELECT GROUP_CONCAT(CONCAT(upd.first_name, ' ', upd.last_name)) as u, upd.user_id, upd.first_name, upd.last_name, SID, TID, COUNT(*) as CNT, SUM(IF(UID = ?, 1, 0)) as UserRegistered, MAX(IF(UID = ?, ShiftEntry.id, NULL)) as UserEntryId FROM ShiftEntry
                         LEFT JOIN users_personal_data upd ON ShiftEntry.UID = upd.user_id
                         WHERE SID IN (" . implode(',', $shift_ids) . ")
                         GROUP BY SID, TID
@@ -112,7 +115,7 @@ FROM NeededAngelTypes nat
                 WHERE shift_id IN (" . implode(',', $shift_ids) . ")
         GROUP BY shift_id, angel_type_id
 ORDER BY `nat`.`shift_id` ASC;
-            "), [$user->id]);
+            "), [$user->id, $user->id]);
 
             foreach ($shifts as $shift) {
                 $shift->remaining = 0;
@@ -122,10 +125,13 @@ ORDER BY `nat`.`shift_id` ASC;
                 foreach ($shift->neededAngels as $na) {
                     $na->remaining = 0;
                     $na->registered_users = "";
+                    $na->registered = false;
+                    $na->user_entry_id = null;
                     foreach ($shifts_needs as $sn) {
                         if ($sn->shift_id == $na->shift_id && $sn->angel_type_id == $na->angel_type_id) {
                             $shift->registered |= $sn->user_registered > 0;
                             $na->registered = $sn->user_registered > 0;
+                            $na->user_entry_id = $sn->user_entry_id;
                             $na->remaining = $sn->remaining;
                             $shift->remaining += $na->remaining;
                             if ($sn->users_list != null) {
@@ -142,7 +148,121 @@ ORDER BY `nat`.`shift_id` ASC;
             }
         }
 
+        $this->decorate($shifts, $when);
+
         return $shifts;
+    }
+
+    /**
+     * Add the presentation fields the jobs list template renders: a localized date
+     * label, the place used for the card and the place filter, and the time bucket
+     * the shift is grouped into.
+     *
+     * @param iterable $shifts
+     * @param string   $when
+     */
+    protected function decorate($shifts, string $when): void
+    {
+        $locale = session('locale', $this->config->get('default_locale'));
+        $endOfThisWeek = Carbon::now()->endOfWeek();
+        $endOfNextWeek = $endOfThisWeek->copy()->addWeek();
+
+        foreach ($shifts as $shift) {
+            $start = Carbon::createFromTimestamp($shift->start);
+
+            $shift->date_label = $start->locale($locale)->isoFormat('ddd D. MMM');
+            $shift->place_label = $shift->address ?: ($shift->room ? $shift->room->name : '');
+
+            if ($when == 'history') {
+                $shift->bucket = 'earlier';
+            } elseif ($start <= $endOfThisWeek) {
+                $shift->bucket = 'this_week';
+            } elseif ($start <= $endOfNextWeek) {
+                $shift->bucket = 'next_week';
+            } else {
+                $shift->bucket = 'later';
+            }
+        }
+    }
+
+    /**
+     * Group the shifts into the ordered time buckets the list renders as sections.
+     * Empty buckets are dropped.
+     *
+     * @param iterable $shifts
+     * @return array[]
+     */
+    protected function groupShifts($shifts): array
+    {
+        $buckets = [
+            'this_week' => __('This week'),
+            'next_week' => __('Next week'),
+            'later'     => __('Later'),
+            'earlier'   => __('Earlier'),
+        ];
+
+        $groups = [];
+        foreach ($buckets as $key => $label) {
+            $groups[$key] = ['key' => $key, 'label' => $label, 'shifts' => []];
+        }
+
+        foreach ($shifts as $shift) {
+            $groups[$shift->bucket]['shifts'][] = $shift;
+        }
+
+        return array_values(array_filter($groups, function ($group) {
+            return count($group['shifts']) > 0;
+        }));
+    }
+
+    /**
+     * The distinct places of the given shifts, for the place filter.
+     *
+     * @param iterable $shifts
+     * @return string[]
+     */
+    protected function places($shifts): array
+    {
+        $places = [];
+        foreach ($shifts as $shift) {
+            if ($shift->place_label && !in_array($shift->place_label, $places)) {
+                $places[] = $shift->place_label;
+            }
+        }
+        sort($places);
+
+        return $places;
+    }
+
+    /**
+     * @param Collection $shifts
+     * @param string     $view   One of upcoming, mine, history
+     * @param string     $title
+     * @return Response
+     */
+    protected function renderList(Collection $shifts, string $view, string $title): Response
+    {
+        $mineOnly = $view == 'mine';
+
+        if ($mineOnly) {
+            $shifts = $shifts->filter(function ($shift) {
+                return (bool) $shift->registered;
+            })->values();
+        }
+
+        return $this->response->withView(
+            'pages/shifts/list.twig',
+            [
+                'sch'       => $shifts,
+                'groups'    => $this->groupShifts($shifts),
+                'places'    => $this->places($shifts),
+                'view'      => $view,
+                'mine_only' => $mineOnly,
+                'admin'     => false,
+                'user'      => $this->auth->user(),
+                'title'     => $title,
+            ]
+        );
     }
 
     /**
@@ -155,18 +275,7 @@ ORDER BY `nat`.`shift_id` ASC;
             return $this->redirect->to('/');
         }
 
-        $shifts = $this->getData('upcoming');
-
-        return $this->response->withView(
-            'pages/shifts/list.twig',
-            [
-                'sch' => $shifts,
-                'mine_only' => false,
-                'admin' => false,
-                'user' => $user,
-                'title' => 'Upcoming jobs',
-            ]
-        );
+        return $this->renderList($this->getData('upcoming'), 'upcoming', __('Upcoming jobs'));
     }
 
     /**
@@ -179,18 +288,7 @@ ORDER BY `nat`.`shift_id` ASC;
             return $this->redirect->to('/');
         }
 
-        $shifts = $this->getData('upcoming');
-
-        return $this->response->withView(
-            'pages/shifts/list.twig',
-            [
-                'sch' => $shifts,
-                'mine_only' => true,
-                'admin' => false,
-                'user' => $user,
-                'title' => 'My upcoming jobs',
-            ]
-        );
+        return $this->renderList($this->getData('upcoming'), 'mine', __('My upcoming jobs'));
     }
 
     /**
@@ -203,17 +301,6 @@ ORDER BY `nat`.`shift_id` ASC;
             return $this->redirect->to('/');
         }
 
-        $shifts = $this->getData('history');
-
-        return $this->response->withView(
-            'pages/shifts/list.twig',
-            [
-                'sch' => $shifts,
-                'mine_only' => false,
-                'admin' => false,
-                'user' => $user,
-                'title' => 'Job history',
-            ]
-        );
+        return $this->renderList($this->getData('history'), 'history', __('Job history'));
     }
 }

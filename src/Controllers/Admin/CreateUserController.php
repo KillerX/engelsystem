@@ -127,7 +127,7 @@ class CreateUserController extends BaseController
         $usr->settings->email_human = true;
         $usr->settings->email_shiftinfo = true;
         $usr->settings->theme = 1;
-        $usr->settings->language = "en_US";
+        $usr->settings->language = config('default_locale');
 
         $angelTypesToAssignIDs = [];
         foreach ($this->angelType->get() as $angelType) {

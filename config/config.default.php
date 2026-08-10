@@ -313,10 +313,11 @@ return [
     "locales" => [
         "en_US" => "English",
         "de_DE" => "Deutsch",
+        "nb_NO" => "Norsk",
     ],
 
     // The default locale to use
-    "default_locale" => env("DEFAULT_LOCALE", "en_US"),
+    "default_locale" => env("DEFAULT_LOCALE", "nb_NO"),
 
     // Available T-Shirt sizes, set value to null if not available
     "tshirt_sizes" => [

@@ -152,3 +152,93 @@ msgstr "You can find a description at %2$s"
 
 msgid "user.edit.success"
 msgstr "User edited successfully."
+
+# --- Jobs list (BD-Service) ---
+
+msgid "Upcoming jobs"
+msgstr "Upcoming jobs"
+
+msgid "My upcoming jobs"
+msgstr "My upcoming jobs"
+
+msgid "Job history"
+msgstr "Job history"
+
+msgid "All jobs"
+msgstr "All jobs"
+
+msgid "My jobs"
+msgstr "My jobs"
+
+msgid "Free spots"
+msgstr "Free spots"
+
+msgid "Filter by date"
+msgstr "Filter by date"
+
+msgid "All dates"
+msgstr "All dates"
+
+msgid "Filter by place"
+msgstr "Filter by place"
+
+msgid "All places"
+msgstr "All places"
+
+msgid "This week"
+msgstr "This week"
+
+msgid "Next week"
+msgstr "Next week"
+
+msgid "Later"
+msgstr "Later"
+
+msgid "Earlier"
+msgstr "Earlier"
+
+msgid "%s job"
+msgid_plural "%s jobs"
+msgstr[0] "%s job"
+msgstr[1] "%s jobs"
+
+msgid "%s spot left"
+msgid_plural "%s spots left"
+msgstr[0] "%s spot left"
+msgstr[1] "%s spots left"
+
+msgid "You're signed up"
+msgstr "You're signed up"
+
+msgid "Full"
+msgstr "Full"
+
+msgid "Full — the team is complete"
+msgstr "Full — the team is complete"
+
+msgid "%s h"
+msgstr "%s h"
+
+msgid "%s h %s min"
+msgstr "%s h %s min"
+
+msgid "From %s years"
+msgstr "From %s years"
+
+msgid "%s–%s years"
+msgstr "%s–%s years"
+
+msgid "%s of %s signed up"
+msgstr "%s of %s signed up"
+
+msgid "Nobody has signed up yet."
+msgstr "Nobody has signed up yet."
+
+msgid "Sign off"
+msgstr "Sign off"
+
+msgid "See details"
+msgstr "See details"
+
+msgid "No jobs match your filters."
+msgstr "No jobs match your filters."

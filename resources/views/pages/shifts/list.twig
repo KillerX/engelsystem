@@ -4,14 +4,43 @@
 
 
 {% block content %}
-    <div class="bd-page">
-        <div class="bd-jobs__head">
-            <h1 class="bd-title">{{ title }}</h1>
-            {% if not mine_only %}
-                <a class="btn btn-pill-outline" href="/shifts/mine">My jobs</a>
-            {% else %}
-                <a class="btn btn-pill-outline" href="/shifts/list">All jobs</a>
+    <div class="bd-page bd-jobs">
+        <h1 class="bd-title">{{ title }}</h1>
+
+        <div class="bd-filterbar">
+            {% if view != 'history' %}
+                <div class="bd-tabs" role="tablist">
+                    <a class="bd-tab{{ view == 'upcoming' ? ' bd-tab--active' : '' }}" href="/shifts/list"
+                       {% if view == 'upcoming' %}aria-current="page"{% endif %}>{{ __('All jobs') }}</a>
+                    <a class="bd-tab{{ view == 'mine' ? ' bd-tab--active' : '' }}" href="/shifts/mine"
+                       {% if view == 'mine' %}aria-current="page"{% endif %}>{{ __('My jobs') }}</a>
+                </div>
             {% endif %}
+
+            <div class="bd-chips">
+                <button type="button" class="bd-chip bd-chip--toggle" id="filter-spots" aria-pressed="false">
+                    <span class="bi bi-square" aria-hidden="true"></span>
+                    {{ __('Free spots') }}
+                </button>
+                <label class="bd-chip bd-chip--select">
+                    <span class="bi bi-calendar3" aria-hidden="true"></span>
+                    <select id="filter-date" aria-label="{{ __('Filter by date') }}">
+                        <option value="">{{ __('All dates') }}</option>
+                        {% for group in groups %}
+                            <option value="{{ group.key }}">{{ group.label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label class="bd-chip bd-chip--select">
+                    <span class="bi bi-geo-alt" aria-hidden="true"></span>
+                    <select id="filter-place" aria-label="{{ __('Filter by place') }}">
+                        <option value="">{{ __('All places') }}</option>
+                        {% for place in places %}
+                            <option value="{{ place }}">{{ place }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
         </div>
 
         {% include 'layouts/parts/messages.twig' %}
@@ -24,86 +53,274 @@
             </div>
         {% endif %}
 
-        {% for s in sch %}
-            {% if (mine_only and s.registered) or not mine_only %}
-                {% set total = 0 %}
-                {% set taken = 0 %}
-                {% for needed in s.neededAngels %}
-                    {% if needed.count > 0 %}
-                        {% set total = total + needed.count %}
-                        {% set taken = taken + (needed.count - needed.remaining) %}
-                    {% endif %}
-                {% endfor %}
-                {% set pct = total > 0 ? (taken / total * 100)|round : 0 %}
-                {% set full = total > 0 and taken >= total %}
+        {% for group in groups %}
+            <section class="job-group" data-group="{{ group.key }}">
+                <div class="job-group__head">
+                    <h2 class="job-group__title">{{ group.label }}</h2>
+                    <span class="job-group__count">{{ _e('%s job', '%s jobs', group.shifts|length, [group.shifts|length]) }}</span>
+                </div>
 
-                <div class="job-card position-relative{{ full ? ' job-card--full' : '' }}">
-                    <div class="job-card__top">
-                        <span class="job-card__date">{{ s.start|date('D d.m.Y') }}</span>
-                        <h2 class="job-card__title">
-                            <a class="stretched-link text-reset" href="/shifts?action=view&shift_id={{ s.SID }}">{{ s.title }}</a>
-                        </h2>
-                    </div>
+                <div class="job-group__list">
+                    {% for s in group.shifts %}
+                        {# ---- aggregate the needed angel types ---- #}
+                        {% set types = [] %}
+                        {% set total = 0 %}
+                        {% set taken = 0 %}
+                        {% set my_entry_id = null %}
+                        {% for needed in s.neededAngels %}
+                            {% if needed.count > 0 %}
+                                {% set types = types|merge([needed]) %}
+                                {% set total = total + needed.count %}
+                                {% set taken = taken + (needed.count - needed.remaining) %}
+                            {% endif %}
+                            {% if needed.registered and needed.user_entry_id %}
+                                {% set my_entry_id = needed.user_entry_id %}
+                            {% endif %}
+                        {% endfor %}
+                        {% set only = types|length == 1 ? types|first : null %}
+                        {% set pct = total > 0 ? (taken / total * 100)|round : 0 %}
+                        {% set left = total - taken %}
+                        {% set joined = s.registered ? true : false %}
+                        {% set full = total > 0 and left <= 0 and not joined %}
+                        {% set tight = not full and not joined and left > 0 and left <= 1 %}
+                        {% set panel_id = 'job-panel-' ~ s.SID %}
 
-                    <div class="job-meta">
-                        <span class="job-chip">🕘 {{ s.start|date('H:i') }} – {{ s.end|date('H:i') }}</span>
-                        {% if s.responsible_name %}
-                            <span class="job-chip">👤 {{ s.responsible_name }}{% if s.responsible_phone %} · <a class="position-relative" href="tel:{{ s.responsible_phone }}">{{ s.responsible_phone }}</a>{% endif %}</span>
-                        {% endif %}
-                        {% if s.requirements %}
-                            <span class="job-chip">👕 {{ s.requirements }}</span>
-                        {% endif %}
-                        {% if s.address %}
-                            <span class="job-chip">📍 <a class="position-relative" href="https://www.google.com/maps/search/?api=1&query={{ s.address|url_encode }}" target="_blank" rel="noopener">{{ s.address }}</a></span>
-                        {% else %}
-                            <span class="job-chip">📍 <a class="position-relative" href="/rooms?action=view&room_id={{ s.RID }}">{{ s.room.name }}</a></span>
-                        {% endif %}
-                        {% if s.min_age > 13 or s.max_age < 100 %}
-                            <span class="job-chip">🎂 {{ s.min_age }}{% if s.max_age > 100 %}+{% else %} – {{ s.max_age }}{% endif %}</span>
-                        {% endif %}
-                    </div>
+                        <article class="job-card{{ full ? ' job-card--full' : '' }}"
+                                 data-group="{{ group.key }}"
+                                 data-place="{{ s.place_label }}"
+                                 data-spots="{{ (not joined and left > 0) ? '1' : '0' }}">
 
-                    {% if s.description %}
-                        <p class="job-desc">ℹ️ {{ s.description }}</p>
-                    {% endif %}
+                            <div class="job-card__top">
+                                {% if joined %}
+                                    <span class="job-status job-status--joined">
+                                        <span class="bi bi-check-circle-fill" aria-hidden="true"></span>{{ __("You're signed up") }}
+                                    </span>
+                                {% elseif full %}
+                                    <span class="job-status job-status--full">
+                                        <span class="bi bi-people-fill" aria-hidden="true"></span>{{ __('Full') }}
+                                    </span>
+                                {% elseif tight %}
+                                    <span class="job-status job-status--tight">
+                                        <span class="bi bi-hourglass-split" aria-hidden="true"></span>{{ _e('%s spot left', '%s spots left', left, [left]) }}
+                                    </span>
+                                {% elseif total > 0 %}
+                                    <span class="job-status job-status--open">
+                                        <span class="bi bi-calendar-check" aria-hidden="true"></span>{{ _e('%s spot left', '%s spots left', left, [left]) }}
+                                    </span>
+                                {% endif %}
+                                <span class="job-card__date">{{ s.date_label }}</span>
+                            </div>
 
-                    {% if total > 0 %}
-                        <div class="job-need">
-                            {% for needed in s.neededAngels %}
-                                {% if needed.count > 0 %}
-                                    {% set t_taken = needed.count - needed.remaining %}
-                                    {% set t_full = t_taken >= needed.count %}
-                                    {% set t_pct = (t_taken / needed.count * 100)|round %}
-                                    <div class="job-need__type">
-                                        <div class="job-need__row">
-                                            <span class="job-need__label">{{ needed.angelType.name }}</span>
-                                            <div class="job-progress">
-                                                <div class="job-progress__bar" style="width: {{ t_pct }}%;"></div>
-                                            </div>
-                                            {% if t_full %}
-                                                <span class="job-need__count job-need__count--full">{{ t_taken }} / {{ needed.count }} · Full 🎉</span>
-                                            {% else %}
-                                                <span class="job-need__count">{{ t_taken }} / {{ needed.count }}</span>
-                                            {% endif %}
-                                            {% if needed.remaining > 0 and not s.registered and s.canRegister(user.personalData.birthday) %}
-                                                <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}"
-                                                   class="btn btn-signup position-relative d-print-none">Sign up →</a>
-                                            {% endif %}
-                                        </div>
-                                        {% if needed.registered_users %}
+                            <h3 class="job-card__title">
+                                <a href="/shifts?action=view&shift_id={{ s.SID }}">{{ s.title }}</a>
+                            </h3>
+
+                            <div class="job-facts">
+                                {% set minutes = ((s.end - s.start) / 60)|round %}
+                                {% set hours = (minutes / 60)|round(0, 'floor') %}
+                                {% set rest = minutes - hours * 60 %}
+                                <span class="bi bi-clock" aria-hidden="true"></span>
+                                <span>{{ s.start|date('H:i') }} – {{ s.end|date('H:i') }} · {{ rest > 0 ? __('%s h %s min', [hours, rest]) : __('%s h', [hours]) }}</span>
+
+                                <span class="bi bi-geo-alt" aria-hidden="true"></span>
+                                <span>
+                                    {% if s.address %}
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ s.address|url_encode }}" target="_blank" rel="noopener">{{ s.address }}</a>
+                                    {% else %}
+                                        <a href="/rooms?action=view&room_id={{ s.RID }}">{{ s.room.name }}</a>
+                                    {% endif %}
+                                </span>
+
+                                {% if s.responsible_name %}
+                                    <span class="bi bi-person" aria-hidden="true"></span>
+                                    <span>{{ s.responsible_name }}{% if s.responsible_phone %} · <a href="tel:{{ s.responsible_phone }}">{{ s.responsible_phone }}</a>{% endif %}</span>
+                                {% endif %}
+
+                                {% set info = [] %}
+                                {% if s.min_age > 13 or s.max_age < 100 %}
+                                    {% set info = info|merge([s.max_age >= 100 ? __('From %s years', [s.min_age]) : __('%s–%s years', [s.min_age, s.max_age])]) %}
+                                {% endif %}
+                                {% if s.requirements %}{% set info = info|merge([s.requirements]) %}{% endif %}
+                                {% if s.description %}{% set info = info|merge([s.description]) %}{% endif %}
+                                {% if info %}
+                                    <span class="bi bi-info-circle" aria-hidden="true"></span>
+                                    <span class="job-facts__note">{{ info|join(' · ') }}</span>
+                                {% endif %}
+                            </div>
+
+                            {% if total > 0 %}
+                                <div class="job-card__meter">
+                                    <div class="job-progress" role="progressbar" aria-valuenow="{{ taken }}" aria-valuemin="0" aria-valuemax="{{ total }}">
+                                        <div class="job-progress__bar {{ full ? 'job-progress__bar--full' : (tight ? 'job-progress__bar--tight' : 'job-progress__bar--open') }}"
+                                             style="width: {{ full ? 100 : pct }}%;"></div>
+                                    </div>
+                                    <button type="button" class="job-card__toggle js-panel-toggle"
+                                            aria-expanded="false" aria-controls="{{ panel_id }}">
+                                        {{ __('%s of %s signed up', [taken, total]) }}
+                                        <span class="bi bi-chevron-down" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+
+                                <div class="job-card__panel" id="{{ panel_id }}" hidden>
+                                    {% if only %}
+                                        {% if only.registered_users %}
                                             <div class="worker-chips">
-                                                {% for worker in needed.registered_users|split(',') %}
+                                                {% for worker in only.registered_users|split(',') %}
                                                     {% if worker|trim %}<span class="worker-chip">{{ worker|trim }}</span>{% endif %}
                                                 {% endfor %}
                                             </div>
+                                        {% else %}
+                                            <p class="job-card__nobody">{{ __('Nobody has signed up yet.') }}</p>
                                         {% endif %}
-                                    </div>
+                                    {% else %}
+                                        {% for needed in types %}
+                                            {% set t_taken = needed.count - needed.remaining %}
+                                            {% set t_pct = (t_taken / needed.count * 100)|round %}
+                                            <div class="job-need__type">
+                                                <div class="job-need__row">
+                                                    <span class="job-need__label">{{ needed.angelType.name }}</span>
+                                                    <div class="job-progress">
+                                                        <div class="job-progress__bar {{ needed.remaining > 0 ? 'job-progress__bar--open' : 'job-progress__bar--full' }}"
+                                                             style="width: {{ t_pct }}%;"></div>
+                                                    </div>
+                                                    <span class="job-need__count">{{ t_taken }} / {{ needed.count }}</span>
+                                                    {% if needed.remaining > 0 and not s.registered and s.canRegister(user.personalData.birthday) %}
+                                                        <a href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ needed.angelType.id }}"
+                                                           class="btn btn-signup btn-sm d-print-none">{{ __('Sign up') }}</a>
+                                                    {% endif %}
+                                                </div>
+                                                {% if needed.registered_users %}
+                                                    <div class="worker-chips">
+                                                        {% for worker in needed.registered_users|split(',') %}
+                                                            {% if worker|trim %}<span class="worker-chip">{{ worker|trim }}</span>{% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+
+                            <div class="job-card__actions d-print-none">
+                                {% if joined %}
+                                    {% if my_entry_id %}
+                                        <a class="btn btn-pill-danger job-card__cta"
+                                           href="/shift-entries?action=delete&shift_entry_id={{ my_entry_id }}">{{ __('Sign off') }}</a>
+                                    {% endif %}
+                                {% elseif full %}
+                                    <span class="job-card__fullpill">
+                                        <span class="bi bi-people-fill" aria-hidden="true"></span>{{ __('Full — the team is complete') }}
+                                    </span>
+                                {% elseif only and s.canRegister(user.personalData.birthday) %}
+                                    <a class="btn btn-signup job-card__cta"
+                                       href="/shift-entries?action=create&shift_id={{ s.SID }}&angeltype_id={{ only.angelType.id }}">
+                                        {{ __('Sign up') }}
+                                        <span class="bi bi-arrow-right" aria-hidden="true"></span>
+                                    </a>
+                                {% elseif types|length > 1 and s.canRegister(user.personalData.birthday) %}
+                                    <button type="button" class="btn btn-signup job-card__cta js-panel-toggle"
+                                            aria-expanded="false" aria-controls="{{ panel_id }}">
+                                        {{ __('Sign up') }}
+                                        <span class="bi bi-arrow-right" aria-hidden="true"></span>
+                                    </button>
                                 {% endif %}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                                <a class="job-card__more" href="/shifts?action=view&shift_id={{ s.SID }}"
+                                   aria-label="{{ __('See details') }}">
+                                    <span class="bi bi-chevron-right" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </article>
+                    {% endfor %}
                 </div>
-            {% endif %}
+            </section>
         {% endfor %}
+
+        <div class="bd-empty" id="jobs-empty"{% if groups %} hidden{% endif %}>{{ __('No jobs match your filters.') }}</div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        (function () {
+            var page = document.querySelector('.bd-jobs');
+            if (!page) {
+                return;
+            }
+
+            var spots = page.querySelector('#filter-spots');
+            var date = page.querySelector('#filter-date');
+            var place = page.querySelector('#filter-place');
+            var empty = page.querySelector('#jobs-empty');
+            var groups = page.querySelectorAll('.job-group');
+
+            var labels = {
+                one: {{ _e('%s job', '%s jobs', 1, ['%s'])|json_encode|raw }},
+                many: {{ _e('%s job', '%s jobs', 2, ['%s'])|json_encode|raw }}
+            };
+
+            function jobLabel(count) {
+                return (count === 1 ? labels.one : labels.many).replace('%s', count);
+            }
+
+            function apply() {
+                var onlyFree = spots.getAttribute('aria-pressed') === 'true';
+                var visible = 0;
+
+                groups.forEach(function (group) {
+                    var shown = 0;
+
+                    group.querySelectorAll('.job-card').forEach(function (card) {
+                        var ok = (!onlyFree || card.dataset.spots === '1')
+                            && (!date.value || card.dataset.group === date.value)
+                            && (!place.value || card.dataset.place === place.value);
+
+                        card.hidden = !ok;
+                        if (ok) {
+                            shown++;
+                        }
+                    });
+
+                    group.hidden = shown === 0;
+                    group.querySelector('.job-group__count').textContent = jobLabel(shown);
+                    visible += shown;
+                });
+
+                empty.hidden = visible > 0;
+            }
+
+            spots.addEventListener('click', function () {
+                var pressed = spots.getAttribute('aria-pressed') === 'true';
+                spots.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+                spots.querySelector('.bi').className = pressed ? 'bi bi-square' : 'bi bi-check-square';
+                apply();
+            });
+            date.addEventListener('change', apply);
+            place.addEventListener('change', apply);
+
+            page.addEventListener('click', function (event) {
+                var toggle = event.target.closest('.js-panel-toggle');
+                if (!toggle) {
+                    return;
+                }
+
+                var panel = document.getElementById(toggle.getAttribute('aria-controls'));
+                if (!panel) {
+                    return;
+                }
+
+                var open = panel.hidden;
+                panel.hidden = !open;
+
+                var card = toggle.closest('.job-card');
+                card.querySelectorAll('.js-panel-toggle[aria-controls="' + panel.id + '"]').forEach(function (button) {
+                    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    var chevron = button.querySelector('.bi-chevron-down, .bi-chevron-up');
+                    if (chevron) {
+                        chevron.className = open ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
+                    }
+                });
+            });
+        })();
+    </script>
 {% endblock %}

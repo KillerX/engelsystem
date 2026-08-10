@@ -1,0 +1,106 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Engelsystem 2.0\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: \n"
+"Language: nb_NO\n"
+
+# --- Jobs list (BD-Service) ---
+
+msgid "Jobs"
+msgstr "Jobber"
+
+msgid "Upcoming jobs"
+msgstr "Kommende jobber"
+
+msgid "My upcoming jobs"
+msgstr "Mine kommende jobber"
+
+msgid "Job history"
+msgstr "Jobbhistorikk"
+
+msgid "All jobs"
+msgstr "Alle jobber"
+
+msgid "My jobs"
+msgstr "Mine jobber"
+
+msgid "Free spots"
+msgstr "Ledige plasser"
+
+msgid "Filter by date"
+msgstr "Filtrer på dato"
+
+msgid "All dates"
+msgstr "Alle datoer"
+
+msgid "Filter by place"
+msgstr "Filtrer på sted"
+
+msgid "All places"
+msgstr "Alle steder"
+
+msgid "This week"
+msgstr "Denne uken"
+
+msgid "Next week"
+msgstr "Neste uke"
+
+msgid "Later"
+msgstr "Senere"
+
+msgid "Earlier"
+msgstr "Tidligere"
+
+msgid "%s job"
+msgid_plural "%s jobs"
+msgstr[0] "%s jobb"
+msgstr[1] "%s jobber"
+
+msgid "%s spot left"
+msgid_plural "%s spots left"
+msgstr[0] "%s plass igjen"
+msgstr[1] "%s plasser ledige"
+
+msgid "You're signed up"
+msgstr "Du er påmeldt"
+
+msgid "Full"
+msgstr "Fullt"
+
+msgid "Full — the team is complete"
+msgstr "Fullt – laget er komplett"
+
+msgid "%s h"
+msgstr "%s t"
+
+msgid "%s h %s min"
+msgstr "%s t %s min"
+
+msgid "From %s years"
+msgstr "Fra %s år"
+
+msgid "%s–%s years"
+msgstr "%s–%s år"
+
+msgid "%s of %s signed up"
+msgstr "%s av %s påmeldte"
+
+msgid "Nobody has signed up yet."
+msgstr "Ingen har meldt seg på ennå."
+
+msgid "Sign up"
+msgstr "Meld deg på"
+
+msgid "Sign off"
+msgstr "Meld deg av"
+
+msgid "See details"
+msgstr "Se detaljer"
+
+msgid "No jobs match your filters."
+msgstr "Ingen jobber passer filtrene dine."
